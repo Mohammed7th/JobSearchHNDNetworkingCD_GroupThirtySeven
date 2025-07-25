@@ -1,4 +1,4 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven.jobSeekerControllers;
 
-public class JobSeekerHomePage {
+public class JobSeekerHomePageController {
 }

@@ -27,7 +27,11 @@ module com.example.jobsearchhndnetworkingcd_groupthirtyseven {
     requires org.junit.platform.launcher;
     requires java.rmi;
     requires oci.java.sdk.common;
+    requires net.bytebuddy;
 
     opens com.example.jobsearchhndnetworkingcd_groupthirtyseven to javafx.fxml;
+
+    opens com.example.jobsearchhndnetworkingcd_groupthirtyseven.recruiterControllers to javafx.fxml;
+    opens com.example.jobsearchhndnetworkingcd_groupthirtyseven.jobSeekerControllers to javafx.fxml;
     exports com.example.jobsearchhndnetworkingcd_groupthirtyseven;
 }

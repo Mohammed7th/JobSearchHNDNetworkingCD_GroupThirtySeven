@@ -12,22 +12,17 @@ public class DBAccess {
     private static final String URL = "jdbc:mysql://localhost:3306/" + DBNAME + "?useSSL=false";
 
     public static Connection connect() throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
 
-        return DriverManager.getConnection(URL, USER, PASSWORD);
-    }
-
-    public static void accessDb() {
         try {
-            // Class.forName("com.mysql.cj.jdbc.Driver");
 
-            connect();
-            System.out.println("Connected to MySQL!");
-        } catch (SQLException e) {
-            System.out.println("Exception === " + e + " ===");
-            ;
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException | ClassNotFoundException e) {
+
+         return (Connection) e;
+
         }
     }
+
+
 }

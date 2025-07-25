@@ -90,7 +90,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testProjection() {
-        // TODO: the "1" is coming back from the server as a string. checking with xplugin team if this is ok
+        // TODO: the "1" is coming back from the server as a string. checking with
+        // xplugin team if this is ok
         this.collection.add("{\"_id\":\"the_id\",\"g\":1}").execute();
 
         DocResult docs = this.collection.find().fields("$._id as _id, $.g as g, 1 + 1 as q").execute();
@@ -127,9 +128,11 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         try {
             this.collection.add("{\"_id\": \"1\"}").execute();
             DocResult docs = this.collection.find().fields(expr(
-                    mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.13")) ? "{'X':cast(pow(2,63) as signed)+1}" : "{'X':1-cast(pow(2,63) as signed)}"))
+                    mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.13")) ? "{'X':cast(pow(2,63) as signed)+1}"
+                            : "{'X':1-cast(pow(2,63) as signed)}"))
                     .execute();
-            docs.next(); // we are getting valid data from xplugin before the error, need this call to force the error
+            docs.next(); // we are getting valid data from xplugin before the error, need this call to
+                         // force the error
             fail("Statement should raise an error");
         } catch (XProtocolError err) {
             assertEquals(MysqlErrorNumbers.ER_DATA_OUT_OF_RANGE, err.getErrorCode());
@@ -252,7 +255,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
     @Test
     public void testBitwiseExpressions() {
         if (!mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.5"))) {
-            this.collection.add("{\"_id\": \"1\", \"x1\":31, \"x2\":13, \"x3\":8, \"x4\":\"18446744073709551614\"}").execute(); // Requires manual _id.
+            this.collection.add("{\"_id\": \"1\", \"x1\":31, \"x2\":13, \"x3\":8, \"x4\":\"18446744073709551614\"}")
+                    .execute(); // Requires manual _id.
         } else {
             this.collection.add("{\"x1\":31, \"x2\":13, \"x3\":8, \"x4\":\"18446744073709551614\"}").execute();
         }
@@ -276,7 +280,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
     @Test
     public void testIntervalExpressions() {
         if (!mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.5"))) {
-            this.collection.add("{\"_id\": \"1\", \"aDate\":\"2000-01-01\", \"aDatetime\":\"2000-01-01 12:00:01\"}").execute(); // Requires manual _id.
+            this.collection.add("{\"_id\": \"1\", \"aDate\":\"2000-01-01\", \"aDatetime\":\"2000-01-01 12:00:01\"}")
+                    .execute(); // Requires manual _id.
         } else {
             this.collection.add("{\"aDate\":\"2000-01-01\", \"aDatetime\":\"2000-01-01 12:00:01\"}").execute();
         }
@@ -301,19 +306,23 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         docs.next();
         docs = this.collection.find("$.aDate - interval 1 year = '1999-01-01'").execute();
         docs.next();
-        docs = this.collection.find("$.aDatetime + interval '3.1000000' second_microsecond = '2000-01-01 12:00:05'").execute();
+        docs = this.collection.find("$.aDatetime + interval '3.1000000' second_microsecond = '2000-01-01 12:00:05'")
+                .execute();
         docs.next();
-        docs = this.collection.find("$.aDatetime + interval '1:1.1' minute_microsecond = '2000-01-01 12:01:02.100000'").execute();
+        docs = this.collection.find("$.aDatetime + interval '1:1.1' minute_microsecond = '2000-01-01 12:01:02.100000'")
+                .execute();
         docs.next();
         docs = this.collection.find("$.aDatetime + interval '1:1' minute_second = '2000-01-01 12:01:02'").execute();
         docs.next();
-        docs = this.collection.find("$.aDatetime + interval '1:1:1.1' hour_microsecond = '2000-01-01 13:01:02.100000'").execute();
+        docs = this.collection.find("$.aDatetime + interval '1:1:1.1' hour_microsecond = '2000-01-01 13:01:02.100000'")
+                .execute();
         docs.next();
         docs = this.collection.find("$.aDatetime + interval '1:1:1' hour_second = '2000-01-01 13:01:02'").execute();
         docs.next();
         docs = this.collection.find("$.aDatetime + interval '1:1' hour_minute = '2000-01-01 13:01:01'").execute();
         docs.next();
-        docs = this.collection.find("$.aDatetime + interval '2 3:4:5.600' day_microsecond = '2000-01-03 15:04:06.600000'").execute();
+        docs = this.collection
+                .find("$.aDatetime + interval '2 3:4:5.600' day_microsecond = '2000-01-03 15:04:06.600000'").execute();
         docs.next();
         docs = this.collection.find("$.aDatetime + interval '2 3:4:5' day_second = '2000-01-03 15:04:06'").execute();
         docs.next();
@@ -326,17 +335,21 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
     }
 
     @Test
-    // these are important to test the "operator" (BETWEEN/REGEXP/etc) to function representation in the protocol
+    // these are important to test the "operator" (BETWEEN/REGEXP/etc) to function
+    // representation in the protocol
     public void testIlriExpressions() {
         if (!mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.5"))) {
-            this.collection.add("{\"_id\": \"1\", \"a\":\"some text with 5432\", \"b\":\"100\", \"c\":true}").execute(); // Requires manual _id.
+            this.collection.add("{\"_id\": \"1\", \"a\":\"some text with 5432\", \"b\":\"100\", \"c\":true}").execute(); // Requires
+                                                                                                                         // manual
+                                                                                                                         // _id.
         } else {
             this.collection.add("{\"a\":\"some text with 5432\", \"b\":\"100\", \"c\":true}").execute();
         }
 
         DocResult docs;
 
-        // TODO: this is a known problem on the server with JSON value types (with IS NULL too)
+        // TODO: this is a known problem on the server with JSON value types (with IS
+        // NULL too)
         // docs = this.collection.find("$.c IS TRUE AND $.c IS NOT FALSE").execute();
         // docs.next();
 
@@ -446,7 +459,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionRowLocks() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.3")), "MySQL 8.0.3+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.3")),
+                "MySQL 8.0.3+ is required to run this test.");
 
         this.collection.add("{\"_id\":\"1\", \"a\":1}").execute();
         this.collection.add("{\"_id\":\"2\", \"a\":1}").execute();
@@ -468,7 +482,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             session2.startTransaction();
             col2.find("_id = '2'").lockShared().execute(); // should return immediately
 
-            CompletableFuture<DocResult> res1 = col2.find("_id = '1'").lockShared().executeAsync(); // should return immediately
+            CompletableFuture<DocResult> res1 = col2.find("_id = '1'").lockShared().executeAsync(); // should return
+                                                                                                    // immediately
             res1.get(5, TimeUnit.SECONDS);
             assertTrue(res1.isDone());
 
@@ -500,7 +515,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             session2.startTransaction();
             col2.find("_id = '2'").lockExclusive().execute(); // should return immediately
             col2.find("_id = '3'").lockShared().execute(); // should return immediately
-            CompletableFuture<DocResult> res3 = col2.find("_id = '1'").lockExclusive().executeAsync(); // session2 should block
+            CompletableFuture<DocResult> res3 = col2.find("_id = '1'").lockExclusive().executeAsync(); // session2
+                                                                                                       // should block
             assertThrows(TimeoutException.class, () -> {
                 res3.get(5, TimeUnit.SECONDS);
                 return null;
@@ -517,7 +533,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
             session2.startTransaction();
             col2.find("_id = '2'").lockExclusive().execute(); // should return immediately
-            CompletableFuture<DocResult> res4 = col2.find("_id = '1'").lockExclusive().executeAsync(); // session2 should block
+            CompletableFuture<DocResult> res4 = col2.find("_id = '1'").lockExclusive().executeAsync(); // session2
+                                                                                                       // should block
             assertThrows(TimeoutException.class, () -> {
                 res4.get(5, TimeUnit.SECONDS);
                 return null;
@@ -540,12 +557,15 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionRowLockOptions() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.5")), "MySQL 8.0.5+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.5")),
+                "MySQL 8.0.5+ is required to run this test.");
 
-        Function<DocResult, List<String>> asStringList = rr -> rr.fetchAll().stream().map(d -> ((JsonString) d.get("_id")).getString())
+        Function<DocResult, List<String>> asStringList = rr -> rr.fetchAll().stream()
+                .map(d -> ((JsonString) d.get("_id")).getString())
                 .collect(Collectors.toList());
 
-        this.collection.add("{\"_id\":\"1\", \"a\":1}").add("{\"_id\":\"2\", \"a\":1}").add("{\"_id\":\"3\", \"a\":1}").execute();
+        this.collection.add("{\"_id\":\"1\", \"a\":1}").add("{\"_id\":\"2\", \"a\":1}").add("{\"_id\":\"3\", \"a\":1}")
+                .execute();
 
         Session session1 = null;
         Session session2 = null;
@@ -865,13 +885,13 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
         // Result:
         // age_group | cnt
-        // 11        | 2   <-- filtered out by where
-        // 12        | 2   <-- filtered out by limit
-        // 13        | 1   <-- filtered out by having
-        // 14        | 2   * second row in result
-        // 15        | 2   * first row in result
-        // 16        | 1   <-- filtered out by having
-        // 17        | 2   <-- filtered out by offset
+        // 11 | 2 <-- filtered out by where
+        // 12 | 2 <-- filtered out by limit
+        // 13 | 1 <-- filtered out by having
+        // 14 | 2 * second row in result
+        // 15 | 2 * first row in result
+        // 16 | 1 <-- filtered out by having
+        // 17 | 2 <-- filtered out by offset
         DocResult res = this.collection.find("age > 11 and 1 < 2 and 40 between 30 and 900") //
                 .fields("age as age_group, count(name) as cnt, something as something") //
                 .groupBy("something, age") //
@@ -919,8 +939,10 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         if (mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.14"))) {
             // TODO is probably a bug in MySQL 5.7 server:
             // the above request generates query like:
-            // SELECT doc FROM `cjtest_5_1`.`CollectionTest-617` WHERE (JSON_EXTRACT(doc,'$.F1') = (--123))
-            // which returns no records with MySQL 5.7.24 while returns a document with MySQL 8.0.14
+            // SELECT doc FROM `cjtest_5_1`.`CollectionTest-617` WHERE
+            // (JSON_EXTRACT(doc,'$.F1') = (--123))
+            // which returns no records with MySQL 5.7.24 while returns a document with
+            // MySQL 8.0.14
             assertTrue(res.hasData());
             doc = res.fetchOne();
             assertEquals("1004", ((JsonString) doc.get("_id")).getString());
@@ -929,11 +951,14 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testPreparedStatements() {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.14")), "MySQL 8.0.14+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.14")),
+                "MySQL 8.0.14+ is required to run this test.");
 
         // Prepare test data.
-        this.collection.add("{\"_id\":\"1\", \"ord\": 1}", "{\"_id\":\"2\", \"ord\": 2}", "{\"_id\":\"3\", \"ord\": 3}", "{\"_id\":\"4\", \"ord\": 4}",
-                "{\"_id\":\"5\", \"ord\": 5}", "{\"_id\":\"6\", \"ord\": 6}", "{\"_id\":\"7\", \"ord\": 7}", "{\"_id\":\"8\", \"ord\": 8}").execute();
+        this.collection.add("{\"_id\":\"1\", \"ord\": 1}", "{\"_id\":\"2\", \"ord\": 2}", "{\"_id\":\"3\", \"ord\": 3}",
+                "{\"_id\":\"4\", \"ord\": 4}",
+                "{\"_id\":\"5\", \"ord\": 5}", "{\"_id\":\"6\", \"ord\": 6}", "{\"_id\":\"7\", \"ord\": 7}",
+                "{\"_id\":\"8\", \"ord\": 8}").execute();
 
         SessionFactory sf = new SessionFactory();
 
@@ -951,7 +976,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         // Initialize several FindStatement objects.
         FindStatement testFind1 = testCol.find(); // Find all.
         FindStatement testFind2 = testCol.find("$.ord >= :n"); // Criteria with one placeholder.
-        FindStatement testFind3 = testCol.find("$.ord >= :n AND $.ord <= :n + 3"); // Criteria with same placeholder repeated.
+        FindStatement testFind3 = testCol.find("$.ord >= :n AND $.ord <= :n + 3"); // Criteria with same placeholder
+                                                                                   // repeated.
         FindStatement testFind4 = testCol.find("$.ord >= :n AND $.ord <= :m"); // Criteria with multiple placeholders.
 
         assertPreparedStatementsCountsAndId(testSession, 0, testFind1, 0, -1);
@@ -1009,7 +1035,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
         assertPreparedStatementsStatusCounts(testSession, 4, 8, 0);
 
-        // E. Set sort deallocates and resets execution count: 1st execute -> deallocate + non-prepared.
+        // E. Set sort deallocates and resets execution count: 1st execute -> deallocate
+        // + non-prepared.
         assertTestPreparedStatementsResult(testFind1.sort("$._id").execute(), 1, 8);
         assertPreparedStatementsCountsAndId(testSession, 3, testFind1, 0, -1);
         assertTestPreparedStatementsResult(testFind2.sort("$._id").bind("n", 4).execute(), 4, 8);
@@ -1033,7 +1060,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
         assertPreparedStatementsStatusCounts(testSession, 8, 12, 4);
 
-        // G. Set limit for the first time deallocates and re-prepares: 1st execute -> re-prepare + execute.
+        // G. Set limit for the first time deallocates and re-prepares: 1st execute ->
+        // re-prepare + execute.
         assertTestPreparedStatementsResult(testFind1.limit(2).execute(), 1, 2);
         assertPreparedStatementsCountsAndId(testSession, 4, testFind1, 1, 1);
         assertTestPreparedStatementsResult(testFind2.limit(2).execute(), 4, 5);
@@ -1057,7 +1085,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
         assertPreparedStatementsStatusCounts(testSession, 12, 20, 8);
 
-        // I. Set sort deallocates and resets execution count, set limit and bind has no effect: 1st execute -> deallocate + non-prepared.
+        // I. Set sort deallocates and resets execution count, set limit and bind has no
+        // effect: 1st execute -> deallocate + non-prepared.
         assertTestPreparedStatementsResult(testFind1.sort("$._id").limit(2).execute(), 2, 3);
         assertPreparedStatementsCountsAndId(testSession, 3, testFind1, 0, -1);
         assertTestPreparedStatementsResult(testFind2.sort("$._id").limit(2).bind("n", 4).execute(), 5, 6);
@@ -1082,7 +1111,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertPreparedStatementsStatusCounts(testSession, 16, 24, 12);
 
         testSession.close();
-        assertPreparedStatementsCount(sessionThreadId, 0, 10); // Prepared statements won't live past the closing of the session.
+        assertPreparedStatementsCount(sessionThreadId, 0, 10); // Prepared statements won't live past the closing of the
+                                                               // session.
 
         /*
          * Test falling back onto non-prepared statements.
@@ -1128,7 +1158,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertPreparedStatementsStatusCounts(testSession, 2, 2, 0);
 
             testSession.close();
-            assertPreparedStatementsCount(sessionThreadId, 0, 10); // Prepared statements won't live past the closing of the session.
+            assertPreparedStatementsCount(sessionThreadId, 0, 10); // Prepared statements won't live past the closing of
+                                                                   // the session.
         } finally {
             this.session.sql("SET GLOBAL max_prepared_stmt_count = ?").bind(origMaxPrepStmtCount).execute();
         }
@@ -1144,8 +1175,10 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
     @Test
     @SuppressWarnings("deprecation")
     public void testDeprecateWhere() throws Exception {
-        this.collection.add("{\"_id\":\"1\", \"ord\": 1}", "{\"_id\":\"2\", \"ord\": 2}", "{\"_id\":\"3\", \"ord\": 3}", "{\"_id\":\"4\", \"ord\": 4}",
-                "{\"_id\":\"5\", \"ord\": 5}", "{\"_id\":\"6\", \"ord\": 6}", "{\"_id\":\"7\", \"ord\": 7}", "{\"_id\":\"8\", \"ord\": 8}").execute();
+        this.collection.add("{\"_id\":\"1\", \"ord\": 1}", "{\"_id\":\"2\", \"ord\": 2}", "{\"_id\":\"3\", \"ord\": 3}",
+                "{\"_id\":\"4\", \"ord\": 4}",
+                "{\"_id\":\"5\", \"ord\": 5}", "{\"_id\":\"6\", \"ord\": 6}", "{\"_id\":\"7\", \"ord\": 7}",
+                "{\"_id\":\"8\", \"ord\": 8}").execute();
 
         FindStatement testFind = this.collection.find("$.ord <= 2");
 
@@ -1218,7 +1251,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals("03", ((JsonString) doc.get("_id")).getString());
 
         // TSFR3
-        // C/J lexer mistakes if ident equals to reserved word, thus escaped idents are required in this case.
+        // C/J lexer mistakes if ident equals to reserved word, thus escaped idents are
+        // required in this case.
         res = this.collection.find().fields("$.`overlaps` as `overlaps`").orderBy("_id").execute();
         assertEquals(3, res.count());
         doc = res.fetchOne();
@@ -1233,11 +1267,14 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
                 () -> this.collection.find("overlaps $.list").execute());
         assertThrows(WrongArgumentException.class, "No more tokens when expecting one at token position 4",
                 () -> this.collection.find("$.list OVERLAPS").execute());
-        assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 0", () -> this.collection.find("overlaps").execute());
-        assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 1", () -> this.collection.find("NOT overlaps").execute());
+        assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 0",
+                () -> this.collection.find("overlaps").execute());
+        assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 1",
+                () -> this.collection.find("NOT overlaps").execute());
         assertThrows(WrongArgumentException.class, "No more tokens when expecting one at token position 5",
                 () -> this.collection.find("$.list NOT OVERLAPS").execute());
-        assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 1", () -> this.collection.find("not overlaps").execute());
+        assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 1",
+                () -> this.collection.find("not overlaps").execute());
 
         // TSFR5
         res = this.collection.find("[1, 2, 3] OVERLAPS $.age").execute();
@@ -1249,7 +1286,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindInSanity() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, maxrec = 10;
         DbDoc doc = null;
@@ -1271,7 +1309,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find without Condition */
-        docs = this.collection.find().fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3").execute();
+        docs = this.collection.find()
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -1364,7 +1404,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindInValidArray() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, j = 0, maxrec = 8, minArraySize = 3;
         DbDoc doc = null;
@@ -1427,7 +1468,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindInValidMax() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, j = 0, maxFld = 100;
         DbDoc doc = null;
@@ -1435,10 +1477,10 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         String json = "";
         this.session.startTransaction();
 
-        //Max depth N records
+        // Max depth N records
 
-        //Insert and Find max array
-        int maxdepth = 10;//97
+        // Insert and Find max array
+        int maxdepth = 10;// 97
         json = "{\"_id\":\"1002\",\"XYZ\":1111";
         for (j = 0; j < maxFld; j++) {
             json = json + ",\"ARR" + j + "\":[";
@@ -1455,7 +1497,7 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         this.collection.add(json).execute();
 
         json = "{\"_id\":\"1003\",\"XYZ\":2222";
-        //maxdepth = 4;
+        // maxdepth = 4;
         for (j = 0; j < maxFld; j++) {
             json = json + ",\"DATAX" + j + "\":";
             for (i = 0; i < maxdepth; i++) {
@@ -1470,7 +1512,7 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         this.collection.add(json).execute();
 
         // Both arrays and many {}
-        //maxdepth = 4;
+        // maxdepth = 4;
         json = "{\"_id\":\"1001\",\"XYZ\":3333";
         for (j = 0; j < maxFld; j++) {
             json = json + ",\"ARR" + j + "\":[";
@@ -1593,14 +1635,18 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindInValidFunction() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         DbDoc doc = null;
         DocResult docs = null;
 
-        this.collection.add("{\"_id\": \"1001\", \"ARR\":[1,1,2], \"ARR1\":[\"name1\", \"name2\", \"name3\"]}").execute();
-        this.collection.add("{\"_id\": \"1002\", \"ARR\":[1,2,3], \"ARR1\":[\"name4\", \"name5\", \"name6\"]}").execute();
-        this.collection.add("{\"_id\": \"1003\", \"ARR\":[1,4,5], \"ARR1\":[\"name1\", \"name1\", \"name5\"]}").execute();
+        this.collection.add("{\"_id\": \"1001\", \"ARR\":[1,1,2], \"ARR1\":[\"name1\", \"name2\", \"name3\"]}")
+                .execute();
+        this.collection.add("{\"_id\": \"1002\", \"ARR\":[1,2,3], \"ARR1\":[\"name4\", \"name5\", \"name6\"]}")
+                .execute();
+        this.collection.add("{\"_id\": \"1003\", \"ARR\":[1,4,5], \"ARR1\":[\"name1\", \"name1\", \"name5\"]}")
+                .execute();
 
         docs = this.collection.find("[1,1,3] in $.ARR").execute();
         doc = docs.next();
@@ -1621,25 +1667,31 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         RowResult rows = tabNew.select("doc->$._id as _id").where("(1+2) in (1, 2, 3)").execute();
         rows.next();
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) CONT_IN expression requires operator that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) CONT_IN expression requires operator that produce a JSON value\\.",
                 () -> tabNew.select("doc->$._id as _id").where("(1+2) in [1, 2, 3]").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) CONT_IN expression requires operator that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) CONT_IN expression requires operator that produce a JSON value\\.",
                 () -> tabNew.select("doc->$._id as _id").where("(1+2) in doc->$.ARR").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) CONT_IN expression requires function that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) CONT_IN expression requires function that produce a JSON value\\.",
                 () -> this.collection.find("concat('name', '6') in ['name1', 'name2', 'name6']").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) CONT_IN expression requires operator that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) CONT_IN expression requires operator that produce a JSON value\\.",
                 () -> this.collection.find("(1+2) in $.ARR").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) CONT_IN expression requires function that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) CONT_IN expression requires function that produce a JSON value\\.",
                 () -> this.collection.find("concat('name', '6') in $.ARR1").execute());
     }
 
     @Test
     public void testCollectionFindInValidMix() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, j = 0, maxrec = 8, minArraySize = 3;
         DbDoc doc = null;
@@ -1689,7 +1741,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindInInvalid() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, j = 0, maxrec = 8, minArraySize = 3;
         DocResult docs = null;
@@ -1759,7 +1812,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindInUpdate() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, maxrec = 10;
         DbDoc doc = null;
@@ -1783,7 +1837,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find without Condition */
-        docs = this.collection.find().fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3").execute();
+        docs = this.collection.find()
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -1826,7 +1882,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertFalse(docs.hasNext());
 
         /* modify with single IN and sort */
-        res = this.collection.modify("20.1234 in $.F2").set("$.F1", "Data_New_3").sort("CAST($.F4 as SIGNED)").execute();
+        res = this.collection.modify("20.1234 in $.F2").set("$.F1", "Data_New_3").sort("CAST($.F4 as SIGNED)")
+                .execute();
         assertEquals(1, res.getAffectedItemsCount());
         docs = this.collection.find("20.1234 in $.F2").orderBy("CAST($.F4 as SIGNED)").execute();
         doc = docs.next();
@@ -1884,7 +1941,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
     @SuppressWarnings("deprecation")
     @Test
     public void testCollectionFindInDelete() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, maxrec = 10;
         DocResult docs = null;
@@ -1908,7 +1966,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find without Condition */
-        docs = this.collection.find().fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3").execute();
+        docs = this.collection.find()
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             docs.next();
@@ -2005,7 +2065,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindOverlapsSanity() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, maxrec = 10;
         DbDoc doc = null;
@@ -2028,7 +2089,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find without Condition */
-        docs = this.collection.find().fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3").execute();
+        docs = this.collection.find()
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -2121,7 +2184,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindOverlaps() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         try {
             int i = 0, j = 0, maxrec = 8, minArraySize = 3;
@@ -2180,7 +2244,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertEquals("1002", ((JsonString) doc.get("_id")).getString());
             assertFalse(docs.hasNext());
 
-            rows = table.select("doc->$._id as _id").where("[2147483647, 2147483648, 2147483649] overlaps $.ARR1").execute();
+            rows = table.select("doc->$._id as _id").where("[2147483647, 2147483648, 2147483649] overlaps $.ARR1")
+                    .execute();
             r = rows.next();
             assertEquals("\"1000\"", r.getString("_id"));
             r = rows.next();
@@ -2190,7 +2255,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertFalse(rows.hasNext());
 
             /* find with array OVERLAPS array with orderBy */
-            docs = this.collection.find("[2147483648, 2147483648, 2147483649] overlaps $.ARR1").orderBy("_id").execute();
+            docs = this.collection.find("[2147483648, 2147483648, 2147483649] overlaps $.ARR1").orderBy("_id")
+                    .execute();
             doc = docs.next();
             assertEquals("1000", ((JsonString) doc.get("_id")).getString());
             doc = docs.next();
@@ -2233,14 +2299,17 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertTrue(rows.hasNext());
             assertEquals(maxrec, docs.count());
 
-            /* Test OVERLAPS/NOT OVERLAPS with empty array - Expected to pass, though the array is empty but still valid */
-            docs = this.collection.find("[] Overlaps $.ARR1").execute(); //checking the case insensitivity as well
+            /*
+             * Test OVERLAPS/NOT OVERLAPS with empty array - Expected to pass, though the
+             * array is empty but still valid
+             */
+            docs = this.collection.find("[] Overlaps $.ARR1").execute(); // checking the case insensitivity as well
             assertFalse(docs.hasNext());
 
             rows = table.select().where("[] ovErlaps $.ARR1").execute();
             assertFalse(rows.hasNext());
 
-            docs = this.collection.find("$.ARR1 overlapS []").execute(); //checking the case insensitivity as well
+            docs = this.collection.find("$.ARR1 overlapS []").execute(); // checking the case insensitivity as well
             assertFalse(docs.hasNext());
 
             rows = table.select().where("$.ARR1 ovErlaps []").execute();
@@ -2254,7 +2323,7 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertTrue(rows.hasNext());
             assertEquals(maxrec, docs.count());
 
-            docs = this.collection.find("$.ARR1 not oveRlaps []").execute(); //checking the case insensitivity as well
+            docs = this.collection.find("$.ARR1 not oveRlaps []").execute(); // checking the case insensitivity as well
             assertTrue(docs.hasNext());
             assertEquals(maxrec, docs.count());
 
@@ -2262,12 +2331,15 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertTrue(rows.hasNext());
             assertEquals(maxrec, docs.count());
 
-            /* When the right number of operands are not provided - error should be thrown */
+            /*
+             * When the right number of operands are not provided - error should be thrown
+             */
             assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 0",
                     () -> this.collection.find("overlaps $.ARR1").execute());
             assertThrows(WrongArgumentException.class, "No more tokens when expecting one at token position 4",
                     () -> this.collection.find("$.ARR1 OVERLAPS").execute());
-            assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 0", () -> this.collection.find("OVERLAPS").execute());
+            assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 0",
+                    () -> this.collection.find("OVERLAPS").execute());
             assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 1",
                     () -> this.collection.find("not overlaps $.ARR1").execute());
             assertThrows(WrongArgumentException.class, "No more tokens when expecting one at token position 5",
@@ -2281,7 +2353,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
                     () -> table1.select().where("overlaps $.ARR1").execute());
             assertThrows(WrongArgumentException.class, "No more tokens when expecting one at token position 4",
                     () -> table1.select().where("$.ARR1 OVERLAPS").execute());
-            assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 0", () -> table1.select().where("OVERLAPS").execute());
+            assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 0",
+                    () -> table1.select().where("OVERLAPS").execute());
             assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 1",
                     () -> table1.select().where("not overlaps $.ARR1").execute());
             assertThrows(WrongArgumentException.class, "No more tokens when expecting one at token position 5",
@@ -2289,11 +2362,15 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertThrows(WrongArgumentException.class, "Cannot find atomic expression at token position 1",
                     () -> table1.select().where("not OVERLAPS").execute());
 
-            /* invalid criteria, e.g. .find("[1, 2, 3] OVERLAPS $.age") . where $.age is atomic value */
+            /*
+             * invalid criteria, e.g. .find("[1, 2, 3] OVERLAPS $.age") . where $.age is
+             * atomic value
+             */
             dropCollection("coll2");
             Collection coll2 = this.schema.createCollection("coll2", true);
             coll2.add("{ \"_id\": \"1\", \"name\": \"nonjson\", \"age\": \"50\",\"arrayField\":[1,[7]]}").execute();
-            //The below command should give exception, but X-plugin doesn't return any error
+            // The below command should give exception, but X-plugin doesn't return any
+            // error
             docs = coll2.find("[1,2,3] overlaps $.age").execute();
             assertEquals(0, docs.count());
             docs = coll2.find("arrayField OVERLAPS [7]").execute();
@@ -2309,8 +2386,10 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             /* Test with empty spaces */
             dropCollection("coll3");
             Collection coll3 = this.schema.createCollection("coll3", true);
-            coll3.add("{ \"_id\":1, \"name\": \"Record1\",\"list\":[\"\"], \"age\":15, \"intList\":[1,2,3] }").execute();//List contains an array without any space
-            coll3.add("{ \"_id\":2, \"name\": \"overlaps\",\"list\":[\" \"],\"age\":24}").execute();//List contains an array with space
+            coll3.add("{ \"_id\":1, \"name\": \"Record1\",\"list\":[\"\"], \"age\":15, \"intList\":[1,2,3] }")
+                    .execute();// List contains an array without any space
+            coll3.add("{ \"_id\":2, \"name\": \"overlaps\",\"list\":[\" \"],\"age\":24}").execute();// List contains an
+                                                                                                    // array with space
             coll3.add("{ \"_id\":3, \"overlaps\": \"overlaps\",\"age\":30}").execute();
             docs = coll3.find("[''] OVERLAPS $.list").execute();
             assertEquals(1, docs.count());
@@ -2359,11 +2438,21 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
             dropCollection("coll4");
             Collection coll4 = this.schema.createCollection("coll4", true);
-            coll4.add("{\"overlaps\":{\"one\":1, \"two\":2, \"three\":3},\"list\":{\"one\":1, \"two\":2, \"three\":3},\"name\":\"one\"}").execute();
-            coll4.add("{\"overlaps\":{\"one\":1, \"two\":2, \"three\":3},\"list\":{\"four\":4, \"five\":5, \"six\":6},\"name\":\"two\"}").execute();
-            coll4.add("{\"overlaps\":{\"one\":1, \"three\":3, \"five\":5},\"list\":{\"two\":2, \"four\":4, \"six\":6},\"name\":\"three\"}").execute();
-            coll4.add("{\"overlaps\":{\"one\":1, \"three\":3, \"five\":5},\"list\":{\"three\":3, \"six\":9, \"nine\":9},\"name\":\"four\"}").execute();
-            coll4.add("{\"overlaps\":{\"one\":1, \"three\":3, \"five\":5},\"list\":{\"three\":6, \"six\":12, \"nine\":18},\"name\":\"five\"}").execute();
+            coll4.add(
+                    "{\"overlaps\":{\"one\":1, \"two\":2, \"three\":3},\"list\":{\"one\":1, \"two\":2, \"three\":3},\"name\":\"one\"}")
+                    .execute();
+            coll4.add(
+                    "{\"overlaps\":{\"one\":1, \"two\":2, \"three\":3},\"list\":{\"four\":4, \"five\":5, \"six\":6},\"name\":\"two\"}")
+                    .execute();
+            coll4.add(
+                    "{\"overlaps\":{\"one\":1, \"three\":3, \"five\":5},\"list\":{\"two\":2, \"four\":4, \"six\":6},\"name\":\"three\"}")
+                    .execute();
+            coll4.add(
+                    "{\"overlaps\":{\"one\":1, \"three\":3, \"five\":5},\"list\":{\"three\":3, \"six\":9, \"nine\":9},\"name\":\"four\"}")
+                    .execute();
+            coll4.add(
+                    "{\"overlaps\":{\"one\":1, \"three\":3, \"five\":5},\"list\":{\"three\":6, \"six\":12, \"nine\":18},\"name\":\"five\"}")
+                    .execute();
             coll4.add("{\"overlaps\":{\"one\":[1,2,3]}, \"list\":{\"one\":[3,4,5]}, \"name\":\"six\"}").execute();
             coll4.add("{\"overlaps\":{\"one\":[1,2,3]}, \"list\":{\"one\":[1,2,3]}, \"name\":\"seven\"}").execute();
 
@@ -2390,14 +2479,18 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollectionFindOverlapsWithExpr() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         DbDoc doc = null;
         DocResult docs = null;
 
-        this.collection.add("{\"_id\": \"1001\", \"ARR\":[1,1,2], \"ARR1\":[\"name1\", \"name2\", \"name3\"]}").execute();
-        this.collection.add("{\"_id\": \"1002\", \"ARR\":[1,2,3], \"ARR1\":[\"name4\", \"name5\", \"name6\"]}").execute();
-        this.collection.add("{\"_id\": \"1003\", \"ARR\":[1,4,5], \"ARR1\":[\"name1\", \"name1\", \"name5\"]}").execute();
+        this.collection.add("{\"_id\": \"1001\", \"ARR\":[1,1,2], \"ARR1\":[\"name1\", \"name2\", \"name3\"]}")
+                .execute();
+        this.collection.add("{\"_id\": \"1002\", \"ARR\":[1,2,3], \"ARR1\":[\"name4\", \"name5\", \"name6\"]}")
+                .execute();
+        this.collection.add("{\"_id\": \"1003\", \"ARR\":[1,4,5], \"ARR1\":[\"name1\", \"name1\", \"name5\"]}")
+                .execute();
 
         docs = this.collection.find("[1,1,3] overlaps $.ARR").execute();
         doc = docs.next();
@@ -2438,19 +2531,24 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         docs = this.collection.find("true overlaps [2]").execute();
         assertEquals(0, docs.count());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
                 () -> this.collection.find("[1,2,3] overlaps $.ARR overlaps [2]").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
                 () -> this.collection.find("(1+2) overlaps [1, 2, 3]").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) OVERLAPS expression requires function that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) OVERLAPS expression requires function that produce a JSON value\\.",
                 () -> this.collection.find("concat('name', '6') overlaps ['name1', 'name2', 'name6']").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
                 () -> this.collection.find("(1+2) overlaps $.ARR").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) OVERLAPS expression requires function that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) OVERLAPS expression requires function that produce a JSON value\\.",
                 () -> this.collection.find("concat('name', '6') overlaps $.ARR1").execute());
 
         Table tabNew = this.schema.getCollectionAsTable(this.collectionName);
@@ -2458,20 +2556,24 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         rows.next();
         assertEquals(3, rows.count());
 
-        rows = tabNew.select("doc->$._id as _id").where("[concat('name', '6')] overlaps ['name1', 'name2', 'name6']").execute();
+        rows = tabNew.select("doc->$._id as _id").where("[concat('name', '6')] overlaps ['name1', 'name2', 'name6']")
+                .execute();
         rows.next();
         assertEquals(3, rows.count());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) OVERLAPS expression requires function that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) OVERLAPS expression requires function that produce a JSON value\\.",
                 () -> tabNew.select("doc->$._id as _id").where("expr(1+2) overlaps [1, 2, 3]").execute());
 
-        assertThrows(XProtocolError.class, "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
+        assertThrows(XProtocolError.class,
+                "ERROR 5154 \\(HY000\\) OVERLAPS expression requires operator that produce a JSON value\\.",
                 () -> tabNew.select("doc->$._id as _id").where("(1+2) overlaps doc->$.ARR").execute());
     }
 
     @Test
     public void testCollectionFindOverlapsValidMix() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, j = 0, maxrec = 8, minArraySize = 3;
         DbDoc doc = null;
@@ -2526,7 +2628,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     @Test
     public void testCollModifyTabUpdateWithOverlaps() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, maxrec = 10;
         DbDoc doc = null;
@@ -2551,7 +2654,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find without Condition */
-        docs = this.collection.find().fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3").execute();
+        docs = this.collection.find()
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -2586,7 +2691,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertFalse(docs.hasNext());
 
         /* modify with single overlaps and sort */
-        res = this.collection.modify("10000 overlaps $.F4").set("$.F1", "Data_New_2").sort("CAST($.F4 as SIGNED)").execute();
+        res = this.collection.modify("10000 overlaps $.F4").set("$.F1", "Data_New_2").sort("CAST($.F4 as SIGNED)")
+                .execute();
         assertEquals(1, res.getAffectedItemsCount());
         docs = this.collection.find("10000 overlaps $.F4").orderBy("CAST($.F4 as SIGNED)").execute();
         doc = docs.next();
@@ -2594,7 +2700,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertFalse(docs.hasNext());
 
         /* modify with single overlaps and sort */
-        res = this.collection.modify("20.1234 overlaps $.F2").set("$.F1", "Data_New_3").sort("CAST($.F4 as SIGNED)").execute();
+        res = this.collection.modify("20.1234 overlaps $.F2").set("$.F1", "Data_New_3").sort("CAST($.F4 as SIGNED)")
+                .execute();
         assertEquals(1, res.getAffectedItemsCount());
         docs = this.collection.find("20.1234 overlaps $.F2").orderBy("CAST($.F4 as SIGNED)").execute();
         doc = docs.next();
@@ -2652,7 +2759,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
     @SuppressWarnings("deprecation")
     @Test
     public void testCollRemoveTabDeleteWithOverlaps() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, maxrec = 10;
         DocResult docs = null;
@@ -2676,7 +2784,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find without Condition */
-        docs = this.collection.find().fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3").execute();
+        docs = this.collection.find()
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             docs.next();
@@ -2807,7 +2917,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
                 newDoc2 = null;
             }
 
-            assertThrows(XProtocolError.class, "ERROR 3151 \\(22032\\) The JSON object contains a key name that is too long\\.",
+            assertThrows(XProtocolError.class,
+                    "ERROR 3151 \\(22032\\) The JSON object contains a key name that is too long\\.",
                     () -> this.collection.add(jsonlist).execute());
 
             /* With Max Keysize */
@@ -2817,13 +2928,14 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
                 newDoc2.add("_id", new JsonString().setValue(String.valueOf(i + 1 + 1000)));
                 newDoc2.add(s1 + "1", new JsonNumber().setValue(String.valueOf(i + 1)));
                 newDoc2.add(s1 + "2", new JsonString().setValue("Data_1" + i));
-                //jsonlist[i]=newDoc2;
+                // jsonlist[i]=newDoc2;
                 this.collection.add(newDoc2).execute();
                 newDoc2 = null;
             }
-            //coll.add(jsonlist).execute();
+            // coll.add(jsonlist).execute();
 
-            DocResult docs0 = this.collection.find("$._id= '1001'").fields("$._id as _id, $." + s1 + "1 as " + s1 + "X, $." + s1 + "2 as " + s1 + "Y")
+            DocResult docs0 = this.collection.find("$._id= '1001'")
+                    .fields("$._id as _id, $." + s1 + "1 as " + s1 + "X, $." + s1 + "2 as " + s1 + "Y")
                     .execute();
             DbDoc doc0 = docs0.next();
             assertEquals(String.valueOf(1 + 1000), ((JsonString) doc0.get("_id")).getString());
@@ -2839,7 +2951,7 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
     /* Large Data */
     @Test
-    //@Ignore("Wait for 1M Data issue Fix in Plugin")
+    // @Ignore("Wait for 1M Data issue Fix in Plugin")
     public void testCollectionFindStress_003() throws Exception {
         int i = 0, maxrec = 5;
         int maxLen = 1024 * 1024 + 4;
@@ -2876,7 +2988,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
                 newDoc2 = null;
             }
 
-            DocResult docs0 = this.collection.find("$._id= '1001'").fields("$._id as _id, $.F1 as f1, $.F2 as f2").execute();
+            DocResult docs0 = this.collection.find("$._id= '1001'").fields("$._id as _id, $.F1 as f1, $.F2 as f2")
+                    .execute();
             DbDoc doc0 = docs0.next();
             assertEquals(String.valueOf(1 + 1000), ((JsonString) doc0.get("_id")).getString());
         } finally {
@@ -2971,7 +3084,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* Compare Big Int */
-        DocResult docs = this.collection.find("CAST($.F3 as SIGNED) =" + l1).fields("$._id as _id, $.F3 as f3, $.F3 as f3").execute();
+        DocResult docs = this.collection.find("CAST($.F3 as SIGNED) =" + l1)
+                .fields("$._id as _id, $.F3 as f3, $.F3 as f3").execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -2981,7 +3095,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(1, i);
 
         /* Compare Big Int */
-        docs = this.collection.find("CAST($.F5 as SIGNED) =" + l3 + "+" + 3).fields("$._id as _id, $.F1 as f1, $.F5 as f5").execute();
+        docs = this.collection.find("CAST($.F5 as SIGNED) =" + l3 + "+" + 3)
+                .fields("$._id as _id, $.F1 as f1, $.F5 as f5").execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -2991,7 +3106,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(1, i);
 
         /* CAST in Order By */
-        docs = this.collection.find("CAST($.F5 as SIGNED) < " + l3 + "+" + 5).fields("$._id as _id, $.F1 as f1, $.F5 as f5").orderBy("CAST($.F5 as SIGNED) asc")
+        docs = this.collection.find("CAST($.F5 as SIGNED) < " + l3 + "+" + 5)
+                .fields("$._id as _id, $.F1 as f1, $.F5 as f5").orderBy("CAST($.F5 as SIGNED) asc")
                 .execute();
         i = 0;
         while (docs.hasNext()) {
@@ -3001,7 +3117,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         }
         assertEquals(5, i);
 
-        docs = this.collection.find("CAST($.F4 as SIGNED) < " + l2 + "+" + 5).fields("$._id as _id, $.F1 as f1, $.F4 as f4")
+        docs = this.collection.find("CAST($.F4 as SIGNED) < " + l2 + "+" + 5)
+                .fields("$._id as _id, $.F1 as f1, $.F4 as f4")
                 .orderBy("CAST($.F4 as SIGNED) desc").execute();
         i = 4;
         while (docs.hasNext()) {
@@ -3012,7 +3129,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(-1, i);
 
         /* Compare Double */
-        docs = this.collection.find("CAST($.F2 as DECIMAL(10,4)) =" + d1).fields("$._id as _id, $.F1 as f1, $.F2 as f2").execute();
+        docs = this.collection.find("CAST($.F2 as DECIMAL(10,4)) =" + d1).fields("$._id as _id, $.F1 as f1, $.F2 as f2")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -3022,7 +3140,10 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(1, i);
     }
 
-    /* OPerators =,!=,<,>,<=,>= IN, NOT IN,Like , Not Like, Between, REGEXP,NOT REGEXP , interval,|,&,^,<<,>>,~ */
+    /*
+     * OPerators =,!=,<,>,<=,>= IN, NOT IN,Like , Not Like, Between, REGEXP,NOT
+     * REGEXP , interval,|,&,^,<<,>>,~
+     */
     @Test
     public void testCollectionFindBasic() throws Exception {
         int i = 0, maxrec = 10;
@@ -3046,7 +3167,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find without Condition */
-        docs = this.collection.find().fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3").execute();
+        docs = this.collection.find()
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3,$.F2/10 as tmp1,1/2 as tmp2").orderBy("$.F3")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -3083,7 +3206,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertFalse(docs.hasNext());
 
         /* find with order by limit and offset with condition */
-        docs = this.collection.find("$.F3 > 2").orderBy("CAST($.F4 as SIGNED)").fields("$._id as _id, $.F2/$.F3 as f1,$.F4 as f4").limit(10).offset(2)
+        docs = this.collection.find("$.F3 > 2").orderBy("CAST($.F4 as SIGNED)")
+                .fields("$._id as _id, $.F2/$.F3 as f1,$.F4 as f4").limit(10).offset(2)
                 .execute();
         i = 0;
         while (docs.hasNext()) {
@@ -3118,7 +3242,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec * grpcnt, this.collection.count());
 
         /* find with groupBy (Sum) with Having Clause */
-        DocResult docs = this.collection.find().fields("sum($.F1) as sum_f1, sum($.F2) as sum_f2, sum($.F3) as sum_f3,Max($.F4) as max_f4 ").groupBy("$.F1")
+        DocResult docs = this.collection.find()
+                .fields("sum($.F1) as sum_f1, sum($.F2) as sum_f2, sum($.F3) as sum_f3,Max($.F4) as max_f4 ")
+                .groupBy("$.F1")
                 .having("MIn($.F1) > 10").orderBy("sum($.F1)").execute();
         i = 1;
         while (docs.hasNext()) {
@@ -3127,12 +3253,15 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertEquals((long) (i * grpcnt * 10), (long) ((JsonNumber) doc.get("sum_f1")).getInteger());
             assertEquals((long) (i * grpcnt), (long) ((JsonNumber) doc.get("sum_f2")).getInteger());
             assertEquals((long) (i * grpcnt * 100), (long) ((JsonNumber) doc.get("sum_f3")).getInteger());
-            //assertEquals((buildString(10+i,'X')), (((JsonString) doc.get("max_f4")).getString()));
+            // assertEquals((buildString(10+i,'X')), (((JsonString)
+            // doc.get("max_f4")).getString()));
         }
         assertEquals(maxrec, i);
 
         /* find with groupBy (Max) with Having Clause on String */
-        docs = this.collection.find().fields("max($.F1) as max_f1, max($.F2) as max_f2, max($.F3) as max_f3,max($.F4) as max_f4 ").groupBy("$.F4")
+        docs = this.collection.find()
+                .fields("max($.F1) as max_f1, max($.F2) as max_f2, max($.F3) as max_f3,max($.F4) as max_f4 ")
+                .groupBy("$.F4")
                 .having("max($.F1) > 20").execute();
         i = 2;
         while (docs.hasNext()) {
@@ -3141,13 +3270,17 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertEquals(String.valueOf(i * 10), ((JsonString) doc.get("max_f1")).getString());
             assertEquals(String.valueOf(i), ((JsonString) doc.get("max_f2")).getString());
             assertEquals(String.valueOf(i * 100), ((JsonString) doc.get("max_f3")).getString());
-            //assertEquals((buildString(10+i,'X')), (((JsonString) doc.get("max_f4")).getString()));
+            // assertEquals((buildString(10+i,'X')), (((JsonString)
+            // doc.get("max_f4")).getString()));
         }
         assertEquals(maxrec, i);
 
-        docs = this.collection.find().fields("max($.F1) as max_f1, max($.F2) as max_f2, max($.F3) as max_f3,max($.F4) as max_f4max_f4").groupBy("$.F4")
+        docs = this.collection.find()
+                .fields("max($.F1) as max_f1, max($.F2) as max_f2, max($.F3) as max_f3,max($.F4) as max_f4max_f4")
+                .groupBy("$.F4")
                 .having("max($.F1) > 20").orderBy("$.F4").execute();
-        //docs = coll.find().fields("max($.F4) as max_f4,$.F4 as f4").groupBy("$.F4").having("max($.F1) > 20").orderBy("$.F4").execute();
+        // docs = coll.find().fields("max($.F4) as max_f4,$.F4 as
+        // f4").groupBy("$.F4").having("max($.F1) > 20").orderBy("$.F4").execute();
         i = 2;
         while (docs.hasNext()) {
             i++;
@@ -3155,11 +3288,14 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertEquals(String.valueOf(i * 10), ((JsonString) doc.get("max_f1")).getString());
             assertEquals(String.valueOf(i), ((JsonString) doc.get("max_f2")).getString());
             assertEquals(String.valueOf(i * 100), ((JsonString) doc.get("max_f3")).getString());
-            //assertEquals((buildString(10+i,'X')), (((JsonString) doc.get("max_f4")).getString()));
+            // assertEquals((buildString(10+i,'X')), (((JsonString)
+            // doc.get("max_f4")).getString()));
         }
         assertEquals(maxrec, i);
 
-        docs = this.collection.find().fields("max($.F1) as max_f1, max($.F2) as max_f2, max($.F3) as max_f3,max($.F4) as max_f4max_f4").groupBy("$.F4")
+        docs = this.collection.find()
+                .fields("max($.F1) as max_f1, max($.F2) as max_f2, max($.F3) as max_f3,max($.F4) as max_f4max_f4")
+                .groupBy("$.F4")
                 .having("max($.F1) > 20").orderBy("$.F4").limit(1).offset(1).execute();
         doc = docs.next();
         assertEquals(String.valueOf(40), ((JsonString) doc.get("max_f1")).getString());
@@ -3211,7 +3347,10 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertFalse(docs.hasNext());
     }
 
-    /* OPerators =,!=,<,>,<=,>= IN, NOT IN,Like , Not Like, Between, REGEXP,NOT REGEXP , interval,|,&,^,<<,>>,~ */
+    /*
+     * OPerators =,!=,<,>,<=,>= IN, NOT IN,Like , Not Like, Between, REGEXP,NOT
+     * REGEXP , interval,|,&,^,<<,>>,~
+     */
     /* REGEXP,NOT REGEXP,LIKE, NOT LIKE, */
     @Test
     public void testCollectionFindWithStringComparison() throws Exception {
@@ -3226,8 +3365,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             newDoc2.add("_id", new JsonString().setValue(String.valueOf(i + 1 + 1000)));
             newDoc2.add("F1", new JsonNumber().setValue(String.valueOf(10 * (i + 1))));
             newDoc2.add("F2", new JsonNumber().setValue(String.valueOf(i + 1)));
-            newDoc2.add("F3", new JsonString().setValue(buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#')));
-            //    newDoc2.add("F3", new JsonString().setValue("?????"));
+            newDoc2.add("F3", new JsonString().setValue(
+                    buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#')));
+            // newDoc2.add("F3", new JsonString().setValue("?????"));
             jsonlist[i] = newDoc2;
             newDoc2 = null;
         }
@@ -3236,57 +3376,70 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find With REGEXP Condition */
-        DocResult docs = this.collection.find("$.F3  REGEXP 'q'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").execute();
+        DocResult docs = this.collection.find("$.F3  REGEXP 'q'")
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
-            assertEquals(buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#'), ((JsonString) doc.get("f3")).getString());
+            assertEquals(buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#'),
+                    ((JsonString) doc.get("f3")).getString());
             i++;
         }
         assertEquals(maxrec, i);
 
         /* find With REGEXP Condition */
-        docs = this.collection.find("$.F3 REGEXP 'qXX#'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").execute();
+        docs = this.collection.find("$.F3 REGEXP 'qXX#'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
+                .execute();
         doc = docs.next();
-        assertEquals(buildString(SLen + 2, 'q') + buildString(2, 'X') + buildString(SLen + 2, '#'), ((JsonString) doc.get("f3")).getString());
+        assertEquals(buildString(SLen + 2, 'q') + buildString(2, 'X') + buildString(SLen + 2, '#'),
+                ((JsonString) doc.get("f3")).getString());
         assertFalse(docs.hasNext());
 
         /* find With Not REGEXP Condition */
-        docs = this.collection.find("$.F3 NOT REGEXP 'qX*#'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").execute();
+        docs = this.collection.find("$.F3 NOT REGEXP 'qX*#'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
+                .execute();
         i = 0;
         assertFalse(docs.hasNext());
 
         /* find With REGEXP Condition */
-        docs = this.collection.find("$.F3 REGEXP 'qXXXX#'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").execute();
+        docs = this.collection.find("$.F3 REGEXP 'qXXXX#'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
+                .execute();
         doc = docs.next();
-        assertEquals(buildString(SLen + 4, 'q') + buildString(4, 'X') + buildString(SLen + 4, '#'), ((JsonString) doc.get("f3")).getString());
+        assertEquals(buildString(SLen + 4, 'q') + buildString(4, 'X') + buildString(SLen + 4, '#'),
+                ((JsonString) doc.get("f3")).getString());
         assertFalse(docs.hasNext());
 
         /* find With Like Condition */
-        docs = this.collection.find("$.F3  like '%q_X_#%'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").orderBy("CAST($.F2 as SIGNED)")
+        docs = this.collection.find("$.F3  like '%q_X_#%'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
+                .orderBy("CAST($.F2 as SIGNED)")
                 .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
-            assertEquals(buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#'), ((JsonString) doc.get("f3")).getString());
+            assertEquals(buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#'),
+                    ((JsonString) doc.get("f3")).getString());
             i++;
         }
         assertEquals(3, i);
 
         /* find With Not Like Condition */
-        docs = this.collection.find("$.F3 Like '%qX#%'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").execute();
+        docs = this.collection.find("$.F3 Like '%qX#%'").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
+                .execute();
         doc = docs.next();
-        assertEquals(buildString(SLen + 1, 'q') + buildString(1, 'X') + buildString(SLen + 1, '#'), ((JsonString) doc.get("f3")).getString());
+        assertEquals(buildString(SLen + 1, 'q') + buildString(1, 'X') + buildString(SLen + 1, '#'),
+                ((JsonString) doc.get("f3")).getString());
         assertFalse(docs.hasNext());
 
         /* find With Like and NOT REGEXP Condition */
-        docs = this.collection.find("$.F3 NOT REGEXP 'qqX##' and $.F3  like '%q_X_#%' ").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
+        docs = this.collection.find("$.F3 NOT REGEXP 'qqX##' and $.F3  like '%q_X_#%' ")
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
                 .orderBy("CAST($.F2 as SIGNED)").execute();
         i = 0;
         while (docs.hasNext()) {
             i++;
             doc = docs.next();
-            assertEquals(buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#'), ((JsonString) doc.get("f3")).getString());
+            assertEquals(buildString(SLen + i + 1, 'q') + buildString(1 + i, 'X') + buildString(SLen + i + 1, '#'),
+                    ((JsonString) doc.get("f3")).getString());
 
         }
         assertEquals(2, i);
@@ -3295,7 +3448,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         docs = this.collection.find("$.F3 NOT REGEXP 'qqX##' and $.F3  like '%q_X_#%' and $.F1 between 21 and 31")
                 .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3").orderBy("CAST($.F2 as SIGNED)").execute();
         doc = docs.next();
-        assertEquals(buildString(SLen + 3, 'q') + buildString(3, 'X') + buildString(SLen + 3, '#'), ((JsonString) doc.get("f3")).getString());
+        assertEquals(buildString(SLen + 3, 'q') + buildString(3, 'X') + buildString(SLen + 3, '#'),
+                ((JsonString) doc.get("f3")).getString());
         assertEquals((long) 30, (long) ((JsonNumber) doc.get("f1")).getInteger());
         assertFalse(docs.hasNext());
     }
@@ -3303,7 +3457,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
     /* |,&,^,<<,>>,~ */
     @Test
     public void testCollectionFindWithBitOperation() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         int i = 0, maxrec = 10;
         int SLen = 1;
@@ -3317,7 +3472,7 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             newDoc2.add("F1", new JsonNumber().setValue(String.valueOf(i + 1)));
             newDoc2.add("F2", new JsonNumber().setValue(String.valueOf((int) Math.pow(2, i + 1))));
             newDoc2.add("F3", new JsonString().setValue(buildString(SLen + i, 'q')));
-            //    newDoc2.add("F3", new JsonString().setValue("?????"));
+            // newDoc2.add("F3", new JsonString().setValue("?????"));
             jsonlist[i] = newDoc2;
             newDoc2 = null;
         }
@@ -3341,14 +3496,16 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, i);
 
         /* find With bitwise & Condition */
-        docs = this.collection.find("CAST($.F2 as SIGNED) & 64 ").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 , $.F2 & 64 as tmp").execute();
+        docs = this.collection.find("CAST($.F2 as SIGNED) & 64 ")
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 , $.F2 & 64 as tmp").execute();
         doc = docs.next();
         assertEquals((long) 64, (long) ((JsonNumber) doc.get("f2")).getInteger());
         assertEquals((long) 64, (long) ((JsonNumber) doc.get("tmp")).getInteger());
         assertFalse(docs.hasNext());
 
         /* find With bitwise | Condition */
-        docs = this.collection.find("CAST($.F2 as SIGNED) | $.F1 = 37 ").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 ,$.F2 | $.F1  as tmp")
+        docs = this.collection.find("CAST($.F2 as SIGNED) | $.F1 = 37 ")
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 ,$.F2 | $.F1  as tmp")
                 .execute();
         doc = docs.next();
         assertEquals((long) 32, (long) ((JsonNumber) doc.get("f2")).getInteger());
@@ -3356,21 +3513,24 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertFalse(docs.hasNext());
 
         /* find With bitwise << Condition */
-        docs = this.collection.find("CAST($.F2 as SIGNED) = 1<<4 ").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 ,  1<<4  as tmp").execute();
+        docs = this.collection.find("CAST($.F2 as SIGNED) = 1<<4 ")
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 ,  1<<4  as tmp").execute();
         doc = docs.next();
         assertEquals((long) 16, (long) ((JsonNumber) doc.get("f2")).getInteger());
         assertEquals((long) 16, (long) ((JsonNumber) doc.get("tmp")).getInteger());
         assertFalse(docs.hasNext());
 
         /* find With bitwise >> Condition */
-        docs = this.collection.find("CAST($.F2 as SIGNED) = 32>>4 ").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 , 32>>4  as tmp").execute();
+        docs = this.collection.find("CAST($.F2 as SIGNED) = 32>>4 ")
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 , 32>>4  as tmp").execute();
         doc = docs.next();
         assertEquals((long) 2, (long) ((JsonNumber) doc.get("f2")).getInteger());
         assertEquals((long) 2, (long) ((JsonNumber) doc.get("tmp")).getInteger());
         assertFalse(docs.hasNext());
 
         /* find With bitwise ^ Condition */
-        docs = this.collection.find("CAST($.F2 as SIGNED) ^ 1 = 17").fields("$._id as _id,$.F2 as f2, $.F2 ^ 1 as tmp").execute();
+        docs = this.collection.find("CAST($.F2 as SIGNED) ^ 1 = 17").fields("$._id as _id,$.F2 as f2, $.F2 ^ 1 as tmp")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -3382,12 +3542,13 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         this.collection.add("{\"x1\":\"31\", \"x2\":\"13\", \"x3\":\"8\", \"x4\":\"18446744073709551614\"}").execute();
 
         /* find With bitwise ~ Condition **********FAILING************ */
-        docs = this.collection.find("~16 = ~CAST($.F2 as SIGNED)").fields("$._id as _id,$.F2 as f2, ~1 as tmp").execute();
+        docs = this.collection.find("~16 = ~CAST($.F2 as SIGNED)").fields("$._id as _id,$.F2 as f2, ~1 as tmp")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
             assertEquals((long) 16, (long) ((JsonNumber) doc.get("f2")).getInteger());
-            //assertEquals(17, (((JsonNumber) doc.get("tmp")).getInteger()));
+            // assertEquals(17, (((JsonNumber) doc.get("tmp")).getInteger()));
             i++;
         }
         assertFalse(docs.hasNext());
@@ -3420,7 +3581,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
         /* find With bitwise | Condition */
         DocResult docs = this.collection.find("CAST($.ival as SIGNED)>1 ")
-                .fields("$._id as _id, $.dt as f1, $.dtime as f2, $.str as f3 , $.ival  as f4,$.dt - interval 25 day as tmp").execute();
+                .fields("$._id as _id, $.dt as f1, $.dtime as f2, $.str as f3 , $.ival  as f4,$.dt - interval 25 day as tmp")
+                .execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -3434,38 +3596,45 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
 
         assertEquals(maxrec - 1, i);
         /* find With bitwise interval Condition */
-        docs = this.collection.find("$.dt + interval 6 day = '2007-03-02' ").fields("$._id as _id, $.dt as f1 ").execute();
+        docs = this.collection.find("$.dt + interval 6 day = '2007-03-02' ").fields("$._id as _id, $.dt as f1 ")
+                .execute();
         doc = docs.next();
         assertEquals("2007-02-24", ((JsonString) doc.get("f1")).getString());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("$.dt + interval 1 month = '2006-03-22' ").fields("$._id as _id, $.dt as f1 ").execute();
+        docs = this.collection.find("$.dt + interval 1 month = '2006-03-22' ").fields("$._id as _id, $.dt as f1 ")
+                .execute();
         doc = docs.next();
         assertEquals("2006-02-22", ((JsonString) doc.get("f1")).getString());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("$.dt + interval 1 year = '2010-02-28' ").fields("$._id as _id, $.dt as f1 ").execute();
+        docs = this.collection.find("$.dt + interval 1 year = '2010-02-28' ").fields("$._id as _id, $.dt as f1 ")
+                .execute();
         doc = docs.next();
         assertEquals("2009-02-28", ((JsonString) doc.get("f1")).getString());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("$.dt - interval 1 year = '2008-02-28' ").fields("$._id as _id, $.dt as f1 ").execute();
+        docs = this.collection.find("$.dt - interval 1 year = '2008-02-28' ").fields("$._id as _id, $.dt as f1 ")
+                .execute();
         doc = docs.next();
         assertEquals("2009-02-28", ((JsonString) doc.get("f1")).getString());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("$.dt - interval 25 day = '2007-01-30' ").fields("$._id as _id, $.dt as f1 ").execute();
+        docs = this.collection.find("$.dt - interval 25 day = '2007-01-30' ").fields("$._id as _id, $.dt as f1 ")
+                .execute();
         doc = docs.next();
         assertEquals("2007-02-24", ((JsonString) doc.get("f1")).getString());
         assertFalse(docs.hasNext());
 
         /* Between */
-        docs = this.collection.find("CAST($.ival as SIGNED) between 65 and 128 ").fields("$._id as _id, $.ival as f1 ").execute();
+        docs = this.collection.find("CAST($.ival as SIGNED) between 65 and 128 ").fields("$._id as _id, $.ival as f1 ")
+                .execute();
         doc = docs.next();
         assertEquals((long) 128, (long) ((JsonNumber) doc.get("f1")).getInteger());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("$.dt between '2006-01-28' and '2007-02-01' ").fields("$._id as _id, $.dt as f1 ").execute();
+        docs = this.collection.find("$.dt between '2006-01-28' and '2007-02-01' ").fields("$._id as _id, $.dt as f1 ")
+                .execute();
         doc = docs.next();
         assertEquals("2006-02-22", ((JsonString) doc.get("f1")).getString());
         assertFalse(docs.hasNext());
@@ -3475,7 +3644,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals((long) -2147483648, (long) ((JsonNumber) doc.get("f1")).getInteger());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("(CAST($.ival as SIGNED) between 9 and 31) or (CAST($.ival as SIGNED) between 65 and 128)")
+        docs = this.collection
+                .find("(CAST($.ival as SIGNED) between 9 and 31) or (CAST($.ival as SIGNED) between 65 and 128)")
                 .fields("$._id as _id, $.ival as f1 ").orderBy("CAST($.ival as SIGNED) asc").execute();
         doc = docs.next();
         assertEquals((long) 16, (long) ((JsonNumber) doc.get("f1")).getInteger());
@@ -3483,17 +3653,20 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals((long) 128, (long) ((JsonNumber) doc.get("f1")).getInteger());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("(CAST($.ival as SIGNED) between 9 and 31) and (CAST($.ival as SIGNED) between 65 and 128)")
+        docs = this.collection
+                .find("(CAST($.ival as SIGNED) between 9 and 31) and (CAST($.ival as SIGNED) between 65 and 128)")
                 .fields("$._id as _id, $.ival as f1 ").orderBy("CAST($.ival as SIGNED)").execute();
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("CAST($.ival as SIGNED) in (20,NULL,31.5,'17',16,CAST($.ival as SIGNED)+1) ").fields("$._id as _id, $.ival as f1 ")
+        docs = this.collection.find("CAST($.ival as SIGNED) in (20,NULL,31.5,'17',16,CAST($.ival as SIGNED)+1) ")
+                .fields("$._id as _id, $.ival as f1 ")
                 .execute();
         doc = docs.next();
         assertEquals((long) 16, (long) ((JsonNumber) doc.get("f1")).getInteger());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("(CAST($.ival as SIGNED) in (16,32,4,256,512)) and ($.dt - interval 25 day = '2007-01-30' ) and  ($.ival not in(2,4))")
+        docs = this.collection.find(
+                "(CAST($.ival as SIGNED) in (16,32,4,256,512)) and ($.dt - interval 25 day = '2007-01-30' ) and  ($.ival not in(2,4))")
                 .fields("$._id as _id, $.ival as f1 ").execute();
         doc = docs.next();
         assertEquals((long) 256, (long) ((JsonNumber) doc.get("f1")).getInteger());
@@ -3527,7 +3700,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, this.collection.count());
 
         /* find all */
-        DocResult docs = this.collection.find("CAST($.F2 as SIGNED) > ? ").bind(new Object[] { 1 }).fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
+        DocResult docs = this.collection.find("CAST($.F2 as SIGNED) > ? ").bind(new Object[] { 1 })
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3")
                 .execute();
         i = 0;
         while (docs.hasNext()) {
@@ -3535,7 +3709,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertEquals(String.valueOf(i + 1 + 1000), ((JsonString) doc.get("_id")).getString());
             assertEquals((long) (i + 1), (long) ((JsonNumber) doc.get("f1")).getInteger());
             assertEquals((long) (int) Math.pow(2, i + 1), (long) ((JsonNumber) doc.get("f2")).getInteger());
-            //    assertEquals(buildString(SLen+i,'q'), (((JsonString) doc.get("f3")).getString()));
+            // assertEquals(buildString(SLen+i,'q'), (((JsonString)
+            // doc.get("f3")).getString()));
             i++;
         }
         assertEquals(maxrec, i);
@@ -3550,7 +3725,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals((long) 16, (long) ((JsonNumber) doc.get("F2")).getInteger());
         assertFalse(docs.hasNext());
 
-        docs = this.collection.find("CAST($.F2 as SIGNED) in(?,?,?,?,?,?,?,?,?,?,?+1,?-1)").bind(new Object[] { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 31, 129 })
+        docs = this.collection.find("CAST($.F2 as SIGNED) in(?,?,?,?,?,?,?,?,?,?,?+1,?-1)")
+                .bind(new Object[] { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 31, 129 })
                 .orderBy("CAST($.F2 as SIGNED)").execute();
         doc = docs.next();
         assertEquals((long) 32, (long) ((JsonNumber) doc.get("F2")).getInteger());
@@ -3570,7 +3746,7 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         q = q + ")";
 
         docs = this.collection.find(q).bind(tmp).orderBy("CAST($.F2 as SIGNED) asc").execute();
-        //    docs= coll.find(q).bind(tmp).orderBy("$.F2").execute();
+        // docs= coll.find(q).bind(tmp).orderBy("$.F2").execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -3579,7 +3755,7 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         }
         assertEquals(maxrec, i);
         assertFalse(docs.hasNext());
-        //tmp =null;
+        // tmp =null;
         tmp = new Object[maxrec];
         q = "$.F3 in(";
         for (i = 0; i < maxrec; i++) {
@@ -3591,8 +3767,10 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         }
         q = q + ")";
 
-        docs = this.collection.find(q).bind(tmp).fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 ").orderBy("$.F3 asc").execute();
-        //docs= coll.find("$.F3 not in('dd')").fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 ").orderBy("$.F3 asc").execute();
+        docs = this.collection.find(q).bind(tmp).fields("$._id as _id, $.F1 as f1, $.F2 as f2, $.F3 as f3 ")
+                .orderBy("$.F3 asc").execute();
+        // docs= coll.find("$.F3 not in('dd')").fields("$._id as _id, $.F1 as f1, $.F2
+        // as f2, $.F3 as f3 ").orderBy("$.F3 asc").execute();
         i = 0;
         while (docs.hasNext()) {
             doc = docs.next();
@@ -3608,7 +3786,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         params.put("thePlaceholder", 32);
         params.put("thePlaceholder2", 2);
         docs = this.collection.find("CAST($.F2 as SIGNED) = :thePlaceholder or CAST($.F2 as SIGNED) = :thePlaceholder2")
-                .fields("$._id as _id, $.F1 as f1, $.F2 as f2").bind(params).orderBy("CAST($.F2 as SIGNED) desc").execute();
+                .fields("$._id as _id, $.F1 as f1, $.F2 as f2").bind(params).orderBy("CAST($.F2 as SIGNED) desc")
+                .execute();
         doc = docs.next();
         assertEquals(String.valueOf(1005), ((JsonString) doc.get("_id")).getString());
         assertEquals((long) 32, (long) ((JsonNumber) doc.get("f2")).getInteger());
@@ -3689,7 +3868,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertEquals(maxrec, i);
 
         /* Condition On Array(int) field */
-        ddoc = this.collection.find("CAST($.ARR1[1] as SIGNED) > 2147483650").orderBy("CAST($.ARR1[1] as SIGNED)").execute();
+        ddoc = this.collection.find("CAST($.ARR1[1] as SIGNED) > 2147483650").orderBy("CAST($.ARR1[1] as SIGNED)")
+                .execute();
         i = 0;
         while (ddoc.hasNext()) {
             doc = ddoc.next();
@@ -3705,7 +3885,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         assertFalse(ddoc.hasNext());
 
         /* Multiple Condition On Array(String) field */
-        ddoc = this.collection.find("$.ARR3[1] in ('St_3_1','St_2_1','St_4_1')and $.ARR3[2] in ('St_3_2','St_4_2')").orderBy("$.ARR3[1]").execute();
+        ddoc = this.collection.find("$.ARR3[1] in ('St_3_1','St_2_1','St_4_1')and $.ARR3[2] in ('St_3_2','St_4_2')")
+                .orderBy("$.ARR3[1]").execute();
         doc = ddoc.next();
         assertEquals((long) 4, (long) ((JsonNumber) doc.get("F1")).getInteger());
         doc = ddoc.next();
@@ -3720,7 +3901,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
      */
     @Test
     public void testGetWarningsFromCollection() throws Exception {
-        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")), "MySQL 8.0+ is required to run this test.");
+        assumeTrue(mysqlVersionMeetsMinimum(ServerVersion.parseVersion("8.0.0")),
+                "MySQL 8.0+ is required to run this test.");
 
         String collname = "coll1";
         Collection coll = null;
@@ -3811,9 +3993,11 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
         List<CompletableFuture<DocResult>> futures = new ArrayList<>();
         for (i = 0; i < NUMBER_OF_QUERIES; ++i) {
             if (i % 3 == 0) {
-                futures.add(this.collection.find("F1  like '%Field%-5'").fields("$._id as _id, $.F1 as F1, $.F2 as F2, $.F3 as F3").executeAsync());
+                futures.add(this.collection.find("F1  like '%Field%-5'")
+                        .fields("$._id as _id, $.F1 as F1, $.F2 as F2, $.F3 as F3").executeAsync());
             } else if (i % 3 == 1) {
-                futures.add(this.collection.find("NON_EXISTING_FUNCTION()").fields("$._id as _id, $.F1 as F1, $.F2 as F2, $.F3 as F3").executeAsync()); //Error
+                futures.add(this.collection.find("NON_EXISTING_FUNCTION()")
+                        .fields("$._id as _id, $.F1 as F1, $.F2 as F2, $.F3 as F3").executeAsync()); // Error
             } else {
                 futures.add(this.collection.find("F3 = ?").bind(106).executeAsync());
             }
@@ -3828,8 +4012,11 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
                 assertFalse(docs.hasNext());
             } else if (i % 3 == 1) {
                 final int i1 = i;
-                assertThrows(ExecutionException.class, "com.mysql.cj.protocol.x.XProtocolError: ERROR 1305 \\(42000\\) FUNCTION " + this.schema.getName()
-                        + ".NON_EXISTING_FUNCTION does not exist", () -> futures.get(i1).get());
+                assertThrows(ExecutionException.class,
+                        "com.mysql.cj.protocol.x.XProtocolError: ERROR 1305 \\(42000\\) FUNCTION "
+                                + this.schema.getName()
+                                + ".NON_EXISTING_FUNCTION does not exist",
+                        () -> futures.get(i1).get());
             } else {
                 docs = futures.get(i).get();
                 doc = docs.next();
@@ -3839,7 +4026,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             }
         }
 
-        final CompletableFuture<DocResult> asyncDocs = this.collection.find("F3 > ? and F3 < ?").bind(102, 106).fields(expr("{'_id':$._id,'X':sleep(1)}"))
+        final CompletableFuture<DocResult> asyncDocs = this.collection.find("F3 > ? and F3 < ?").bind(102, 106)
+                .fields(expr("{'_id':$._id,'X':sleep(1)}"))
                 .executeAsync();
         assertThrows(java.util.concurrent.TimeoutException.class, () -> asyncDocs.get(2, TimeUnit.SECONDS));
     }
@@ -3872,7 +4060,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertEquals(maxrec, res.getAffectedItemsCount());
 
             /* With Bind,fields and orderBy */
-            asyncDocs = this.collection.find("$.F3  < ? and $.F3 > ? and $.F3 != ?").bind(105, 101, 103).fields("$._id as _id, $.F1 as f1, $.F3 as f3")
+            asyncDocs = this.collection.find("$.F3  < ? and $.F3 > ? and $.F3 != ?").bind(105, 101, 103)
+                    .fields("$._id as _id, $.F1 as f1, $.F3 as f3")
                     .orderBy("$.F3 asc").executeAsync();
             docs = asyncDocs.get();
             doc = docs.next();
@@ -3884,7 +4073,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             assertFalse(docs.hasNext());
 
             /* find with groupBy with Having Clause */
-            asyncDocs = this.collection.find("$.F3 > ? and $.F3 < ?").fields("max($.F1) as max_f1, sum($.F2) as max_f2, sum($.F3) as max_f3 ").groupBy("$.F3")
+            asyncDocs = this.collection.find("$.F3 > ? and $.F3 < ?")
+                    .fields("max($.F1) as max_f1, sum($.F2) as max_f2, sum($.F3) as max_f3 ").groupBy("$.F3")
                     .having("max($.F3) > 105 and max($.F3) < 107 ").bind(104, 108).executeAsync();
             docs = asyncDocs.get();
             doc = docs.next();
@@ -3898,7 +4088,8 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
                     "CREATE FUNCTION abcd (`p1 col1` CHAR(20)) RETURNS ENUM('YES','NO')  COMMENT 'Sample Function abcd'  DETERMINISTIC RETURN  IF(EXISTS(SELECT 1 ), 'YES', 'NO' )");
 
             /* execute Function */
-            asyncDocs = this.collection.find("$.F1 like ? and $.F1  not like ? and $.F1 not like ?").bind(new Object[] { "%Fie%-2", "%Fie%-1", "%Fie%-3" })
+            asyncDocs = this.collection.find("$.F1 like ? and $.F1  not like ? and $.F1 not like ?")
+                    .bind(new Object[] { "%Fie%-2", "%Fie%-1", "%Fie%-3" })
                     .fields(expr("{'_id':$._id,'F3':$.F3,'X': abcd('S')}")).executeAsync();
             docs = asyncDocs.get();
             doc = docs.next();
@@ -3912,7 +4103,9 @@ public class CollectionFindTest extends testsuite.x.devapi.BaseCollectionTestCas
             params.put("namedParam10000", "%Fie%-2");
             params.put("namedParam10001", "%Fie%-3");
             params.put("namedParam10002", 102);
-            asyncDocs = this.collection.find("($.F1 like :namedParam10000 OR $.F1 not like :namedParam10001) and $.F3  = :namedParam10002").bind(params)
+            asyncDocs = this.collection
+                    .find("($.F1 like :namedParam10000 OR $.F1 not like :namedParam10001) and $.F3  = :namedParam10002")
+                    .bind(params)
                     .fields(expr("{'_id':$._id,'F3':$.F3,'X': abcd('S')}")).executeAsync();
             docs = asyncDocs.get();
             doc = docs.next();
