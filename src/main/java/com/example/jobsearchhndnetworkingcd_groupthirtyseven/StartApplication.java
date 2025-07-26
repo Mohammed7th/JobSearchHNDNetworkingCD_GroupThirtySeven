@@ -1,9 +1,6 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven;
 
-import com.example.jobsearchhndnetworkingcd_groupthirtyseven.dbAccess.DBAccess;
-import com.example.jobsearchhndnetworkingcd_groupthirtyseven.models.JobSeekerInfo;
-import com.example.jobsearchhndnetworkingcd_groupthirtyseven.models.RecruiterInfo;
-import com.example.jobsearchhndnetworkingcd_groupthirtyseven.models.User;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
