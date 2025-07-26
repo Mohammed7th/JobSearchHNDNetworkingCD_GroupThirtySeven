@@ -16,11 +16,6 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.scene.control.Alert;
