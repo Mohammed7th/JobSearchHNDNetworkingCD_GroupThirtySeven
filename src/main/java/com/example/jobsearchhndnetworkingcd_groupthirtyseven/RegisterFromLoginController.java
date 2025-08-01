@@ -2,6 +2,7 @@ package com.example.jobsearchhndnetworkingcd_groupthirtyseven;
 
 
 
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.actions.Actions;
 import com.example.jobsearchhndnetworkingcd_groupthirtyseven.authentication.AuthService;
 
 
@@ -31,13 +32,14 @@ public class RegisterFromLoginController implements Initializable {
     public TextField registerUsername;
     public TextField registerUserPassword;
 
+    Actions actions = new Actions();
 
+    //function for adding the user types to the choiceBox
     public void initialize(URL location, ResourceBundle resources){
         onChoiceBox.getItems().addAll("JobSeeker", "Recruiter");
     }
 
-
-
+    //function to register user
     public void getRegistered() {
         AuthService authService = new AuthService();
         String username =registerUsername.getText();
@@ -48,12 +50,7 @@ public class RegisterFromLoginController implements Initializable {
                 choice == null || choice.isEmpty()) {
 
             // Show alert to user
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Input Error");
-            alert.setHeaderText(null);
-            alert.setContentText("All fields must be filled out.");
-            alert.showAndWait();
-
+            Actions.showAlertBox("Input Error","All fields must be filled out.");
             return; // stop registration
         }
 
@@ -75,31 +72,37 @@ public class RegisterFromLoginController implements Initializable {
         String checkChoice =onChoiceBox.getValue();
         if ("JobSeeker".equals(checkChoice)){
             stageName ="Logged in as JobSeeker";
-            directory = "JobSeekerHomePage.fxml";
-            System.out.println(getClass().getResource(directory));
-            nextPage("JobSeekerHomePage.fxml", event, "JobSearch: " + stageName);
+            actions.nextPage(
+                    829,
+                    523,
+                    "/jobSeeker/JobSeekerHomePage.fxml",
+                    event,
+                    "JobSearch: " + stageName
+            );
         }else{
             stageName ="Logged in as Recruiter";
-            directory = "RecruiterHomePage.fxml";
-            System.out.println(getClass().getResource(directory));
-            nextPage("RecruiterHomePage.fxml", event, "JobSearch: " + stageName);
+            actions.nextPage(
+                    829,
+                    523,
+                    "/recruiter/RecruiterHomePage.fxml",
+                    event,
+                    "JobSearch: " + stageName
+            );
         }
 
     }
 
     public void onClickLogin(ActionEvent event) throws IOException {
-        nextPage("Login.fxml", event, "My New Stage Title");
+        actions.nextPage(
+                700,
+                400,
+                "/Login.fxml",
+                event,
+                "My New Stage Title"
+        );
 
     }
 
-    private void nextPage(String name, ActionEvent event, String My_New_Stage_Title) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(name));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = fxmlLoader.load();
-        stage.setTitle(My_New_Stage_Title);
-        stage.setScene(new Scene(root, 700, 400));
-        stage.show();
-    }
 
 
 }

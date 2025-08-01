@@ -1,29 +1,19 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven;
 
-
-
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.actions.Actions;
 import com.example.jobsearchhndnetworkingcd_groupthirtyseven.authentication.AuthService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.net.URI;
 import java.sql.ResultSet;
+
 
 public class LoginController {
 
-
     public TextField usernameID;
     public TextField passwordID;
+    Actions actions = new Actions();
 
     @FXML
     protected void onClickLogin(ActionEvent event) throws Exception {
@@ -33,11 +23,7 @@ public class LoginController {
 
         // Validate input fields first
         if (usernameID.getText().isEmpty() || passwordID.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Input Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Username and password fields cannot be empty.");
-            alert.showAndWait();
+            Actions.showAlertBox("Input Error","Username and password fields cannot be empty.");
             return;
         }
 
@@ -52,11 +38,7 @@ public class LoginController {
                 System.out.println("Role not found.");
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Authentication Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Incorrect username or password. Please try again.");
-            alert.showAndWait();
+            Actions.showAlertBox("Authentication Error","Incorrect username or password. Please try again.");
             return;
         }
 
@@ -64,32 +46,31 @@ public class LoginController {
         String stageName, directory;
         if ("JobSeeker".equals(role)) {
             stageName = "Logged in as JobSeeker";
-            directory = "JobSeekerHomePage.fxml";
+            directory = "/jobSeeker/JobSeekerHomePage.fxml";
         } else {
             stageName = "Logged in as Recruiter";
-            directory = "RecruiterHomePage.fxml";
+            directory = "/recruiter/RecruiterHomePage.fxml";
         }
 
-        nextPage(directory, event, "JobSearch: " + stageName);
+        actions.nextPage(
+                829,
+                523,
+                directory,
+                event,
+                "JobSearch: " + stageName
+        );
     }
 
 
     public void onClickRegister(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterFromLogin.fxml"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = fxmlLoader.load();
-        stage.setTitle("My New Stage Title");
-        stage.setScene(new Scene(root, 700, 400));
-        stage.show();
-
+        actions.nextPage(
+                700,
+                400,
+                "/RegisterFromLogin.fxml",
+                event,
+                "My New Stage Title"
+        );
     }
 
-    private void nextPage(String name, ActionEvent event, String My_New_Stage_Title) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(name));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = fxmlLoader.load();
-        stage.setTitle(My_New_Stage_Title);
-        stage.setScene(new Scene(root, 700, 400));
-        stage.show();
-    }
+
 }

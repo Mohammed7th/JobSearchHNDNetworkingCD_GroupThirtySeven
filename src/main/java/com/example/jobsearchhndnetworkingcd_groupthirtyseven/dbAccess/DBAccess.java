@@ -19,9 +19,10 @@ public class DBAccess {
             return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException | ClassNotFoundException e) {
 
-         return (Connection) e;
+            System.out.println("ConnectionException: " +e);;
 
         }
+        return null;
     }
 
 
