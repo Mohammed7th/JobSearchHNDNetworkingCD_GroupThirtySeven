@@ -1,14 +1,23 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven.authentication;
 
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.actions.Actions;
 import com.example.jobsearchhndnetworkingcd_groupthirtyseven.dbAccess.DBAccess;
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.models.User;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class AuthService {
+    Actions actions = new Actions();
     private String username;
     private String password;
+    private int userID;
 
     public void Register(String username, String password,String role){
        try {
@@ -33,7 +42,15 @@ public class AuthService {
             ResultSet resultSet= stmt.executeQuery();
             this.username = username;
             this.password = password;
-           return resultSet.next();
+
+            if(resultSet.next()){
+               String userName =resultSet.getString("username");
+               int iD =resultSet.getInt("id");
+
+                User.setUserNameAndID(userName,iD);
+                return true;
+            }
+
         } catch (Exception e) {
             System.out.println("LoginException: "+e);
 
@@ -52,5 +69,16 @@ public class AuthService {
             System.out.println("GetRoleException: "+e);
         }
         return null;
+    }
+
+    public void logout(ActionEvent event) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Logout");
+        alert.setHeaderText("Are you sure you want to log out?");
+        alert.setContentText("Click OK to confirm.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            actions.nextPage(700,400,"/Login.fxml", event,"Login to JobSearch");
+        }
     }
 }

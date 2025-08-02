@@ -1,18 +1,27 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven.models;
 
 public class User {
-    private String userName;
-    private String password;
-    private String role;
+    private static String userName;
+    private static int userID;
 
-    public String getRole() {
-        return role;
+
+    public static void setUserNameAndID(String name, int ID) {
+        userName = name;
+        userID = ID;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public static String getUserName() {
+        return userName;
     }
 
+    public static int getUserID() {
+        return userID;
+    }
+
+    public static void clear() {
+        userID = 0;
+        userName = null;
+    }
 
 
 }

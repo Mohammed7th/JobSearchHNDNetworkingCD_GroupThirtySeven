@@ -1,13 +1,18 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven.jobSeekerControllers;
 
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.actions.Actions;
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.authentication.AuthService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class JobSeekerHomePageController {
     @FXML
@@ -22,48 +27,32 @@ public class JobSeekerHomePageController {
     @FXML
     public Button JSProfileInfoBtn;
 
-    private void resetButtonStyles() {
-        JSDashboardBtn.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-border-color:#dc2f02;" +
-                        "-fx-border-width:4;" +
-                        "-fx-border-radius:5;"
-        );
-        JSApplyForJobsBtn.setStyle(
-                "-fx-background-color:transparent;" +
-                        "-fx-border-color:#dc2f02;" +
-                        "-fx-border-width:4;" +
-                        "-fx-border-radius:5;"
-        );
-        JSProfileInfoBtn.setStyle(
-                "-fx-background-color: transparent;" +
-                        "-fx-border-color:#dc2f02;" +
-                        "-fx-border-width:4;" +
-                        "-fx-border-radius:5;"
-        );
-    }
+    Actions actions = new Actions();
+
 
     public void onClickJSDashboardBtn() throws IOException {
-        resetButtonStyles();
+        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn);
         JSDashboardBtn.setStyle("-fx-background-color: #DC2F02; -fx-text-fill: white;");
         AnchorPane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/jobsearchhndnetworkingcd_groupthirtyseven/jobSeeker/Dashboard.fxml")));
         contentPane.getChildren().setAll(pane);
     }
 
     public void onClickJSApplyForJobsBtn() throws IOException {
-        resetButtonStyles();
+        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn);
         JSApplyForJobsBtn.setStyle("-fx-background-color: #DC2F02; -fx-text-fill: white;");
         AnchorPane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/jobsearchhndnetworkingcd_groupthirtyseven/jobSeeker/ApplyForJob.fxml")));
         contentPane.getChildren().setAll(pane);
     }
 
     public void onClickJSProfileInfoBtn(ActionEvent event) throws IOException {
-        resetButtonStyles();
+        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn);
         JSProfileInfoBtn.setStyle("-fx-background-color: #DC2F02; -fx-text-fill: white;");
         AnchorPane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/jobsearchhndnetworkingcd_groupthirtyseven/jobSeeker/ProfileInfo.fxml")));
         contentPane.getChildren().setAll(pane);
     }
 
-    public void onClickJSLogout(ActionEvent event) {
+    public void onClickJSLogout(ActionEvent event) throws IOException {
+        AuthService authService = new AuthService();
+        authService.logout(event);
     }
 }
