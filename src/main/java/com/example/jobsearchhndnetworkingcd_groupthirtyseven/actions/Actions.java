@@ -38,7 +38,7 @@ public class Actions {
         alert.showAndWait();
     }
 
-    public void resetButtonStyles(Button btnOne, Button btnTwo, Button btnThree) {
+    public void resetButtonStyles(Button btnOne, Button btnTwo, Button btnThree, Button btnFour) {
         btnOne.setStyle(
                 "-fx-background-color: transparent;" +
                         "-fx-border-color:#dc2f02;" +
@@ -52,6 +52,12 @@ public class Actions {
                         "-fx-border-radius:5;"
         );
         btnThree.setStyle(
+                "-fx-background-color: transparent;" +
+                        "-fx-border-color:#dc2f02;" +
+                        "-fx-border-width:4;" +
+                        "-fx-border-radius:5;"
+        );
+        btnFour.setStyle(
                 "-fx-background-color: transparent;" +
                         "-fx-border-color:#dc2f02;" +
                         "-fx-border-width:4;" +

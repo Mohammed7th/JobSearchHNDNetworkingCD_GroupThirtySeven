@@ -1,5 +1,4 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven.recruiterControllers;
 
-public class ProfileInfo {
-
+public class ApplicantsController {
 }

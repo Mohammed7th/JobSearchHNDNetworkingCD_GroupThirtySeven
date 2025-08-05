@@ -27,27 +27,37 @@ public class JobSeekerHomePageController {
     @FXML
     public Button JSProfileInfoBtn;
 
+    @FXML
+    public Button JSAppliedJobsBtn;
+
     Actions actions = new Actions();
 
 
     public void onClickJSDashboardBtn() throws IOException {
-        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn);
+        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn,JSAppliedJobsBtn);
         JSDashboardBtn.setStyle("-fx-background-color: #DC2F02; -fx-text-fill: white;");
         AnchorPane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/jobsearchhndnetworkingcd_groupthirtyseven/jobSeeker/Dashboard.fxml")));
         contentPane.getChildren().setAll(pane);
     }
 
     public void onClickJSApplyForJobsBtn() throws IOException {
-        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn);
+        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn,JSAppliedJobsBtn);
         JSApplyForJobsBtn.setStyle("-fx-background-color: #DC2F02; -fx-text-fill: white;");
         AnchorPane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/jobsearchhndnetworkingcd_groupthirtyseven/jobSeeker/ApplyForJob.fxml")));
         contentPane.getChildren().setAll(pane);
     }
 
     public void onClickJSProfileInfoBtn(ActionEvent event) throws IOException {
-        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn);
+        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn,JSAppliedJobsBtn);
         JSProfileInfoBtn.setStyle("-fx-background-color: #DC2F02; -fx-text-fill: white;");
         AnchorPane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/jobsearchhndnetworkingcd_groupthirtyseven/jobSeeker/ProfileInfo.fxml")));
+        contentPane.getChildren().setAll(pane);
+    }
+
+    public void onClickJSAppliedJobsBtn(ActionEvent event) throws IOException {
+        actions.resetButtonStyles(JSDashboardBtn,JSApplyForJobsBtn,JSProfileInfoBtn,JSAppliedJobsBtn);
+        JSAppliedJobsBtn.setStyle("-fx-background-color: #DC2F02; -fx-text-fill: white;");
+        AnchorPane pane = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/example/jobsearchhndnetworkingcd_groupthirtyseven/jobSeeker/AppliedJobs.fxml")));
         contentPane.getChildren().setAll(pane);
     }
 

@@ -1,7 +1,6 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven;
 
 
-
 import com.example.jobsearchhndnetworkingcd_groupthirtyseven.actions.Actions;
 import com.example.jobsearchhndnetworkingcd_groupthirtyseven.authentication.AuthService;
 
@@ -31,47 +30,50 @@ public class RegisterFromLoginController implements Initializable {
     public ChoiceBox<String> onChoiceBox;
     public TextField registerUsername;
     public TextField registerUserPassword;
+    public TextField phoneNumber;
+    public TextField emailInput;
 
     Actions actions = new Actions();
 
     //function for adding the user types to the choiceBox
-    public void initialize(URL location, ResourceBundle resources){
+    public void initialize(URL location, ResourceBundle resources) {
         onChoiceBox.getItems().addAll("JobSeeker", "Recruiter");
     }
 
     //function to register user
     public void getRegistered() {
         AuthService authService = new AuthService();
-        String username =registerUsername.getText();
-        String password =registerUserPassword.getText();
-        String choice= onChoiceBox.getValue();
+        String username = registerUsername.getText();
+        String password = registerUserPassword.getText();
+        String email = emailInput.getText();
+        String contact = phoneNumber.getText();
+
+        String choice = onChoiceBox.getValue();
         if (username == null || username.isEmpty() ||
                 password == null || password.isEmpty() ||
-                choice == null || choice.isEmpty()) {
-
-            // Show alert to user
-            Actions.showAlertBox("Input Error","All fields must be filled out.");
-            return; // stop registration
+                choice == null || choice.isEmpty() || email == null || email.isEmpty() || contact == null || contact.isEmpty()) {
+            Actions.showAlertBox("Input Error", "All fields must be filled out.");
+            return;
         }
 
 // Proceed if valid
 
-       try {
-           authService.Register(username,password,choice);
-       } catch (Exception e) {
-           System.out.println("Exception with authService: "+e);
-       }
+        try {
+            authService.Register(username, password, choice,email, Integer.parseInt(contact));
+        } catch (Exception e) {
+            System.out.println("Exception with authService: " + e);
+        }
     }
 
     public void onClickRegister(ActionEvent event) throws IOException {
-       getRegistered();
+        getRegistered();
 
         String directory;
         String stageName;
 
-        String checkChoice =onChoiceBox.getValue();
-        if ("JobSeeker".equals(checkChoice)){
-            stageName ="Logged in as JobSeeker";
+        String checkChoice = onChoiceBox.getValue();
+        if ("JobSeeker".equals(checkChoice)) {
+            stageName = "Logged in as JobSeeker";
             actions.nextPage(
                     829,
                     523,
@@ -79,8 +81,8 @@ public class RegisterFromLoginController implements Initializable {
                     event,
                     "JobSearch: " + stageName
             );
-        }else{
-            stageName ="Logged in as Recruiter";
+        } else {
+            stageName = "Logged in as Recruiter";
             actions.nextPage(
                     829,
                     523,
@@ -102,7 +104,6 @@ public class RegisterFromLoginController implements Initializable {
         );
 
     }
-
 
 
 }

@@ -8,13 +8,14 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ApplyForJobController implements Initializable {
+public class AppliedJobsController implements Initializable {
 
     @FXML
-    public VBox cardContainerID;
+    public VBox cardContainer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        new JobSeekerInfo().getJobs(cardContainerID);
+        new JobSeekerInfo().retrieveAppliedJobs(cardContainer);
+
     }
 }

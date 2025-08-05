@@ -36,6 +36,14 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </Button>
+            <Button fx:id="RApplicants" layoutX="53.0" layoutY="179.0" mnemonicParsing="false" onAction="#onClickRApplicantsBtn" prefHeight="47.0" prefWidth="176.0" style="-fx-background-color: transparent; -fx-border-color: #dc2f02; -fx-border-width: 4; -fx-border-radius: 5;" text="Applicants" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
             <Button layoutX="53.0" layoutY="104.0" mnemonicParsing="false" onAction="#onClickRLogoutBtn" prefHeight="47.0" prefWidth="176.0" style="-fx-background-color: transparent; -fx-border-color: #dc2f02; -fx-border-width: 4; -fx-border-radius: 5;" text="Logout" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="17.0" />

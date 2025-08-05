@@ -25,6 +25,11 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Button>
+            <Button fx:id="JSAppliedJobsBtn" layoutX="38.0" layoutY="173.0" mnemonicParsing="false" onAction="#onClickJSAppliedJobsBtn" prefHeight="39.0" prefWidth="176.0" style="-fx-border-color: #dc2f02; -fx-border-width: 4; -fx-border-radius: 5; -fx-background-color: transparent;" text="Applied Jobs" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Button>
             <Button layoutX="38.0" layoutY="98.0" mnemonicParsing="false" onAction="#onClickJSLogout" prefHeight="39.0" prefWidth="176.0" style="-fx-border-color: #dc2f02; -fx-border-width: 4; -fx-border-radius: 5; -fx-background-color: transparent;" text="Logout" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="15.0" />
