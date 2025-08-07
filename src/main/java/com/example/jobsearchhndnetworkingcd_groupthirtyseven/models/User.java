@@ -5,15 +5,20 @@ public class User {
     private static int userID;
     private static String userEmail;
     private static int phoneNumber;
+    private static String role;
 
 
-    public static void setUserNameAndID(String name, int ID, String email, int phoneContact) {
+    public static void setUserNameAndID(String name, int ID, String email, int phoneContact, String userRole) {
         userName = name;
         userID = ID;
         userEmail = email;
         phoneNumber = phoneContact;
+        role = userRole;
     }
 
+    public static String getRole(){
+        return role;
+    }
     public static String getEmail() {
         return userEmail;
     }

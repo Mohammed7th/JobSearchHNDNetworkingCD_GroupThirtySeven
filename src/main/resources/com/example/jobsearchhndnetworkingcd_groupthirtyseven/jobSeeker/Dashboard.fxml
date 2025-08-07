@@ -18,7 +18,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" prefHeight="55.0" prefWidth="87.0" text="0">
+            <Label fx:id="appliedJobsCount" alignment="CENTER" prefHeight="55.0" prefWidth="87.0" text="0">
                <font>
                   <Font name="System Bold" size="50.0" />
                </font>
@@ -32,7 +32,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" prefHeight="55.0" prefWidth="87.0" text="0">
+            <Label fx:id="availableJobsCount" alignment="CENTER" prefHeight="55.0" prefWidth="87.0" text="0">
                <font>
                   <Font name="System Bold" size="50.0" />
                </font>

@@ -47,8 +47,8 @@ public class RegisterFromLoginController implements Initializable {
         String password = registerUserPassword.getText();
         String email = emailInput.getText();
         String contact = phoneNumber.getText();
-
         String choice = onChoiceBox.getValue();
+
         if (username == null || username.isEmpty() ||
                 password == null || password.isEmpty() ||
                 choice == null || choice.isEmpty() || email == null || email.isEmpty() || contact == null || contact.isEmpty()) {

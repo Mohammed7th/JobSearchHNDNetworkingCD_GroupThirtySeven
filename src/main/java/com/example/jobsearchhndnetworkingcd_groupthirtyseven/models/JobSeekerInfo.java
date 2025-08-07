@@ -55,6 +55,7 @@ public class JobSeekerInfo {
             if (!confirmed) return;
 
             applyToJob(jobId);
+            //applyButton
             container.getChildren().remove(card);
         });
 
@@ -154,6 +155,34 @@ public class JobSeekerInfo {
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void getAvailableJobCount(Label availableJobCount){
+        String query= "SELECT COUNT(*) FROM jobs";
+        try {
+            PreparedStatement pS = DBAccess.connect().prepareStatement(query);
+            ResultSet rs = pS.executeQuery();
+            if (rs.next()){
+                int countJobs = rs.getInt(1);
+                availableJobCount.setText(String.valueOf(countJobs));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void getAppliedJobCount(Label appliedJobCount){
+        String query= "SELECT COUNT(*) FROM applications WHERE userID = ?";
+        try {
+            PreparedStatement pS = DBAccess.connect().prepareStatement(query);
+            pS.setInt(1,userID);
+            ResultSet rs = pS.executeQuery();
+            if (rs.next()){
+                int countJobs = rs.getInt(1);
+               appliedJobCount.setText(String.valueOf(countJobs));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }

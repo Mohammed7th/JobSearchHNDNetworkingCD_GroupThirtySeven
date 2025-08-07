@@ -21,13 +21,13 @@ public class AuthService {
 
     public void Register(String username, String password, String role, String email, int phoneNumber) {
         try {
-            String query = "INSERT INTO users (username, password,role,email,phoneNumber) VALUES (?, ?,?,?,?)";
+            String query = "INSERT INTO users (username, password,userRole,email,phoneNumber) VALUES (?, ?,?,?,?);";
             PreparedStatement stmt = DBAccess.connect().prepareStatement(query);
             stmt.setString(1, username);
             stmt.setString(2, password);
             stmt.setString(3, role);
-            stmt.setString(3, email);
-            stmt.setInt(3, phoneNumber);
+            stmt.setString(4, email);
+            stmt.setInt(5, phoneNumber);
             stmt.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -50,7 +50,8 @@ public class AuthService {
                 int iD = resultSet.getInt("id");
                 String email = resultSet.getString("email");
                 int contact = resultSet.getInt("phoneNumber");
-                User.setUserNameAndID(userName, iD, email, contact);
+                String role = resultSet.getString("userRole");
+                User.setUserNameAndID(userName, iD, email, contact,role);
                 return true;
             }
 
@@ -63,7 +64,7 @@ public class AuthService {
 
     public ResultSet getRole() {
         try {
-            String query = "SELECT role FROM users WHERE username =? AND password =?";
+            String query = "SELECT userRole FROM users WHERE username =? AND password =?";
             PreparedStatement stmt = DBAccess.connect().prepareStatement(query);
             stmt.setString(1, this.username);
             stmt.setString(2, this.password);

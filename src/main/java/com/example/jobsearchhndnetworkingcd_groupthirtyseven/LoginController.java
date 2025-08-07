@@ -33,7 +33,7 @@ public class LoginController {
         if (loginSuccessful) {
             ResultSet rs = authService.getRole();
             if (rs != null && rs.next()) {
-                role = rs.getString("role");
+                role = rs.getString("userRole");
             } else {
                 System.out.println("Role not found.");
             }

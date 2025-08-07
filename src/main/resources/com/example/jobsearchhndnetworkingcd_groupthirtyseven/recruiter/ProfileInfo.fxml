@@ -6,9 +6,52 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.text.Font?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.jobsearchhndnetworkingcd_groupthirtyseven.recruiterControllers.ProfileInfo"
             prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <Label layoutX="61.0" layoutY="73.0" text="Name:">
+            <font>
+                <Font name="System Bold" size="38.0" />
+            </font>
+        </Label>
+        <Label layoutX="61.0" layoutY="154.0" text="Contact:">
+            <font>
+                <Font name="System Bold" size="38.0" />
+            </font>
+        </Label>
+        <Label layoutX="64.0" layoutY="246.0" text="Email:">
+            <font>
+                <Font name="System Bold" size="38.0" />
+            </font>
+        </Label>
+        <Label layoutX="66.0" layoutY="350.0" text="Role:">
+            <font>
+                <Font name="System Bold" size="38.0" />
+            </font>
+        </Label>
+        <Label fx:id="nameID" layoutX="192.0" layoutY="85.0" text="name">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <Label fx:id="contactID" layoutX="223.0" layoutY="164.0" text="name">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <Label fx:id="roleID" layoutX="163.0" layoutY="360.0" text="name">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+        <Label fx:id="emailID" layoutX="180.0" layoutY="262.0" text="name">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+    </children>
 
 </AnchorPane>
