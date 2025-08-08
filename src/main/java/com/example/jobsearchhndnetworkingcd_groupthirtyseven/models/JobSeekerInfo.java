@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -171,6 +172,7 @@ public class JobSeekerInfo {
             throw new RuntimeException(e);
         }
     }
+
     public void getAppliedJobCount(Label appliedJobCount){
         String query= "SELECT COUNT(*) FROM applications WHERE userID = ?";
         try {
@@ -184,6 +186,35 @@ public class JobSeekerInfo {
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void searchForJobs(String keyword,VBox container){
+        String query = "SELECT jobID, jobTitle, jobDescription, dateTime, users.userName " +
+                "FROM jobs JOIN users ON jobs.userID = users.id " +
+                "WHERE jobTitle LIKE ? OR jobDescription LIKE ?";
+        try {
+           PreparedStatement pS = DBAccess.connect().prepareStatement(query);
+            String searchPattern = "%" + keyword + "%";
+           pS.setString(1, searchPattern);
+           pS.setString(2, searchPattern);
+
+            ResultSet rs = pS.executeQuery();
+
+            container.getChildren().clear();
+
+            while (rs.next()) {
+                int jobID = rs.getInt("jobID");
+                String title = rs.getString("jobTitle");
+                String description = rs.getString("jobDescription");
+                String recruiterName = rs.getString("userName");
+                String dateTime = rs.getTimestamp("dateTime").toLocalDateTime().toString();
+
+                addJobCardForSeeker(jobID,title,description,recruiterName,dateTime,container);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
 
