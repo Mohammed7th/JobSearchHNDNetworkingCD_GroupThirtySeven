@@ -20,6 +20,7 @@ public class AuthService {
     private int userID;
 
     public void Register(String username, String password, String role, String email, int phoneNumber) {
+
         try {
             String query = "INSERT INTO users (username, password,userRole,email,phoneNumber) VALUES (?, ?,?,?,?);";
             PreparedStatement stmt = DBAccess.connect().prepareStatement(query);
@@ -69,7 +70,7 @@ public class AuthService {
             stmt.setString(1, this.username);
             stmt.setString(2, this.password);
             return stmt.executeQuery();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println("GetRoleException: " + e);
         }
         return null;
@@ -83,6 +84,7 @@ public class AuthService {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             actions.nextPage(700, 400, "/Login.fxml", event, "Login to JobSearch");
+            User.clear();
         }
     }
 }

@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.jobsearchhndnetworkingcd_groupthirtyseven.recruiterControllers.DashboardController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="523.0" prefWidth="606.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.jobsearchhndnetworkingcd_groupthirtyseven.recruiterControllers.DashboardController">
+    <TilePane alignment="TOP_CENTER" layoutX="62.0" layoutY="136.0" prefHeight="200.0" prefWidth="248.0" style="-fx-border-width: 4; -fx-border-color: #454545; -fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #f2f2fa;">
+        <children>
+            <Label alignment="CENTER" prefHeight="54.0" prefWidth="227.0" text="Number of posted Jobs">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Label>
+            <Label fx:id="postedJobsCount" alignment="CENTER" prefHeight="55.0" prefWidth="87.0" text="0">
+                <font>
+                    <Font name="System Bold" size="50.0" />
+                </font>
+            </Label>
+        </children>
+    </TilePane>
+    <TilePane alignment="TOP_CENTER" layoutX="328.0" layoutY="136.0" prefHeight="200.0" prefWidth="248.0" style="-fx-border-width: 4; -fx-border-color: #454545; -fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #f2f2fa;">
+        <children>
+            <Label alignment="CENTER" prefHeight="54.0" prefWidth="227.0" text="Number of Applicants">
+                <font>
+                    <Font name="System Bold" size="18.0" />
+                </font>
+            </Label>
+            <Label fx:id="applicantsCount" alignment="CENTER" prefHeight="55.0" prefWidth="87.0" text="0">
+                <font>
+                    <Font name="System Bold" size="50.0" />
+                </font>
+            </Label>
+        </children>
+    </TilePane>
 </AnchorPane>

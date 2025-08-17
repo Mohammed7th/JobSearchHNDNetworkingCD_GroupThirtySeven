@@ -16,6 +16,10 @@ public class User {
         role = userRole;
     }
 
+    public static void setUserID(int userID) {
+        User.userID = userID;
+    }
+
     public static String getRole(){
         return role;
     }

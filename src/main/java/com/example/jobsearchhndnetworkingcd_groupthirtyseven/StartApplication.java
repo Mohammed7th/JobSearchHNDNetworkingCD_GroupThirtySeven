@@ -1,12 +1,16 @@
 package com.example.jobsearchhndnetworkingcd_groupthirtyseven;
 
 
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.actions.Actions;
+import com.example.jobsearchhndnetworkingcd_groupthirtyseven.dbAccess.DBAccess;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class StartApplication extends Application {
 
@@ -21,7 +25,11 @@ public class StartApplication extends Application {
     }
 
     public static void main(String[] args) {
-        //new DBAccess().accessDb();
+        System.out.println(Actions.isIsDisplayInfoEmpty());
+       Connection connection = DBAccess.connect();
+       if(connection != null){
+           System.out.println("SuccessFully connected");
+       }
         launch();
     }
 }

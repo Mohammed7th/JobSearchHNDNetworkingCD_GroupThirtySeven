@@ -17,7 +17,7 @@ public class RecruiterInfo  {
     private String jobTitle;
     private String jobDescription;
     private LocalDateTime dateTime;
-    private int userID;
+    private int userID = User.getUserID();
 
     public void postJobToDb(String jobTitle, String jobDescription, int userID) {
         try {
@@ -28,7 +28,7 @@ public class RecruiterInfo  {
             ps.setInt(3, userID);
 
             ps.executeUpdate();
-        } catch (RuntimeException | ClassNotFoundException | SQLException e) {
+        } catch (RuntimeException | SQLException e) {
             throw new RuntimeException("Failed to post job: " + e.getMessage(), e);
         }
     }
@@ -51,7 +51,7 @@ public class RecruiterInfo  {
                 addCard(title, description, formattedTime, cardContainerID);
             }
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -83,10 +83,10 @@ public class RecruiterInfo  {
         Label timeLabel = new Label(time);
         timeLabel.setAlignment(Pos.BOTTOM_RIGHT);
 
-        // Add to card
+
         card.getChildren().addAll(topBar, titleLabel, descLabel, timeLabel);
 
-        // Add card to UI
+
         cardContainerID.getChildren().add(card);
     }
 
@@ -101,6 +101,92 @@ public class RecruiterInfo  {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void getPostedJobCount(Label postedJobCount){
+        String query= "SELECT COUNT(*) FROM jobs WHERE userID = ?";
+        try {
+            PreparedStatement pS = DBAccess.connect().prepareStatement(query);
+            pS.setInt(1,userID);
+            ResultSet rs = pS.executeQuery();
+            if (rs.next()){
+                int countJobs = rs.getInt(1);
+                postedJobCount.setText(String.valueOf(countJobs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void getApplicantCount(Label applicantCount){
+        String query= "SELECT COUNT(a.applicationID) FROM applications a JOIN jobs j ON a.jobID = j.jobID WHERE j.userID = ?";
+        try {
+            PreparedStatement pS = DBAccess.connect().prepareStatement(query);
+            pS.setInt(1,userID);
+            ResultSet rs = pS.executeQuery();
+            if (rs.next()){
+                int countJobs = rs.getInt(1);
+                applicantCount.setText(String.valueOf(countJobs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void retrieveApplicantsForRecruiter(int recruiterId, VBox cardContainerID) {
+        String query = """
+                SELECT\s
+                    u.userName AS applicant_name,
+                    u.phoneNumber AS applicant_contact,
+                    u.email AS applicant_email,
+                    j.jobTitle AS job_title,
+                    a.applicationDate AS application_date
+                FROM applications a
+                JOIN jobs j\s
+                    ON a.jobID = j.jobID
+                JOIN users u\s
+                    ON a.userID = u.id
+                WHERE j.userID = ?
+               \s""";
+
+        try (Connection conn = DBAccess.connect();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, recruiterId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String applicantName = rs.getString("applicant_name");
+                String applicantContact = rs.getString("applicant_contact");
+                String applicantEmail = rs.getString("applicant_email");
+                String jobTitle = rs.getString("job_title");
+                LocalDateTime applicationDate = rs.getTimestamp("application_date").toLocalDateTime();
+                String formattedDate = applicationDate.toString();
+
+
+                addCard(applicantName, applicantContact, applicantEmail, jobTitle, formattedDate, cardContainerID);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void addCard(String applicantName, String applicantContact, String applicantEmail,
+                         String jobTitle, String applicationDate, VBox cardContainerID) {
+
+        VBox card = new VBox(5);
+        card.setStyle("-fx-padding: 10; -fx-border-color: #ccc; -fx-border-width: 1; -fx-background-color: #f9f9f9; -fx-background-radius: 5;");
+
+        Label nameLabel = new Label("Name: " + applicantName);
+        Label contactLabel = new Label("Contact: " + applicantContact);
+        Label emailLabel = new Label("Email: " + applicantEmail);
+        Label jobLabel = new Label("Applied for: " + jobTitle);
+        Label dateLabel = new Label("Applied on: " + applicationDate);
+
+        card.getChildren().addAll(nameLabel, contactLabel, emailLabel, jobLabel, dateLabel);
+
+        cardContainerID.getChildren().add(card);
     }
 
 

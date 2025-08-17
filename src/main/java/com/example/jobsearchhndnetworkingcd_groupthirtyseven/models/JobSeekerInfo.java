@@ -38,7 +38,7 @@ public class JobSeekerInfo {
                 addJobCardForSeeker(jobId, title, description, recruiterName, dateTime, container);
             }
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -83,7 +83,7 @@ public class JobSeekerInfo {
                 ps.setInt(2, jobID);
                 ps.executeUpdate();
             }
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -112,7 +112,7 @@ public class JobSeekerInfo {
                 addCardsToShowRetrievedJobs(title, description, formattedTime, container, jobId, postedBy);
             }
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -168,7 +168,7 @@ public class JobSeekerInfo {
                 int countJobs = rs.getInt(1);
                 availableJobCount.setText(String.valueOf(countJobs));
             }
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -183,7 +183,7 @@ public class JobSeekerInfo {
                 int countJobs = rs.getInt(1);
                appliedJobCount.setText(String.valueOf(countJobs));
             }
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -211,7 +211,7 @@ public class JobSeekerInfo {
 
                 addJobCardForSeeker(jobID,title,description,recruiterName,dateTime,container);
             }
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 

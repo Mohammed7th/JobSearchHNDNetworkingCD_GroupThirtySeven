@@ -12,12 +12,24 @@ import java.util.ResourceBundle;
 public class ProfileInfoController implements Initializable {
     @FXML
     public Label nameID;
+
+    @FXML
     public Label contactID;
+
+    @FXML
     public Label roleID;
+
+    @FXML
     public Label emailID;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-       new Actions().displayInfo(nameID,contactID,roleID,emailID);
+
+        try{
+            Actions.displayInfoForNewUser(nameID,contactID,roleID,emailID);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Actions.displayInfo(nameID,contactID,roleID,emailID);
     }
 }

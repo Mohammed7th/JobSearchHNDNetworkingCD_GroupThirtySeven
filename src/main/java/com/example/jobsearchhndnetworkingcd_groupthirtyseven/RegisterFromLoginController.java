@@ -56,10 +56,12 @@ public class RegisterFromLoginController implements Initializable {
             return;
         }
 
-// Proceed if valid
+
 
         try {
-            authService.Register(username, password, choice,email, Integer.parseInt(contact));
+            authService.Register(username, password, choice, email, Integer.parseInt(contact));
+            Actions.fetchNewUserId(username,password);
+
         } catch (Exception e) {
             System.out.println("Exception with authService: " + e);
         }
@@ -68,7 +70,7 @@ public class RegisterFromLoginController implements Initializable {
     public void onClickRegister(ActionEvent event) throws IOException {
         getRegistered();
 
-        String directory;
+
         String stageName;
 
         String checkChoice = onChoiceBox.getValue();

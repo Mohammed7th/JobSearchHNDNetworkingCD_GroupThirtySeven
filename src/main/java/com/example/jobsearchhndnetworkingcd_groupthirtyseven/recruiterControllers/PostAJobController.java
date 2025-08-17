@@ -49,15 +49,20 @@ public class PostAJobController implements Initializable {
         int userIdentification = User.getUserID();
 
 
-
         if (jobTitle == null || jobTitle.isEmpty() || jobDescription == null || jobDescription.isEmpty()) {
             Actions.showAlertBox("Input Error", "All fields Should be filled");
             return;
         }
+
+//        if (userIdentification == null) {
+//            userIdentification = Actions.getUserIdentity();
+//        }
+
         try {
+
             recruiterInfo.postJobToDb(jobTitle, jobDescription, userIdentification);
-           cardContainerID.getChildren().clear();
-           recruiterInfo.retrieveAndAddCardInfo(userIdentification, cardContainerID);
+            cardContainerID.getChildren().clear();
+            recruiterInfo.retrieveAndAddCardInfo(userIdentification, cardContainerID);
             JobTitleInput.setText("");
             JobDespriptionInput.setText("");
             Actions.showAlertBox("Success", "Successfully submitted Job Openning");
